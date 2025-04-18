@@ -37,7 +37,7 @@ export interface Profile {
 
 export const profileData: Profile = {
   name: "Gyuna Kim",
-  title: "HCI Researcher",
+  title: "Digital Health and HCI Researcher",
   email: "gyuna.kim@kaist.ac.kr",
   location: "Daejeon, Republic of Korea",
   bio: "Researching signals (wearable, speech, PPG) for digital health and mental well-being | M.S. student @ KAIST ICLab",

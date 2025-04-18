@@ -6,38 +6,24 @@ export interface ResearchInterest {
 
 export interface ResearchData {
   interests: ResearchInterest[];
-  currentFocus: string[];
-  methodologies: string[];
 }
 
 export const researchData: ResearchData = {
   interests: [
     {
-      title: "Human-Computer Interaction",
-      description: "Exploring novel interaction techniques and user interface designs to enhance user experience",
-      keywords: ["HCI", "User Studies"]
+      title: "Interactive Technologies for Understanding Human Data",
+      description: "Designing interactive systems and visualizations to support digital mental health monitoring and interpretation",
+      keywords: ["Interactive System", "Visualization", "Data Storytelling"]
     },
     {
       title: "Affective Computing",
-      description: "Investigating affective computing and human-computer interaction",
-      keywords: ["Affective Computing", "Human-Computer Interaction"]
+      description: "Analyzing emotional and mental states using multimodal signals such as speech and physiological data",
+      keywords: ["Emotion Recognition", "Speech Analysis", "Mental Health"]
     },
     {
       title: "Signal Processing",
-      description: "Developing signal processing techniques for human-computer interaction",
-      keywords: ["Signal Processing", "Human-Computer Interaction"]
+      description: "Developing signal processing methods to improve the quality and usability of real-world sensor data",
+      keywords: ["PPG", "Signal Quality", "Wearable Sensors"]
     }
-  ],
-  currentFocus: [
-    "Gesture-based interaction techniques",
-    "Mobile health applications",
-    "Accessibility in education technology"
-  ],
-  methodologies: [
-    "User-centered design",
-    "Qualitative research",
-    "Prototyping",
-    "User studies",
-    "Data analysis"
   ]
 }; 

@@ -474,7 +474,7 @@ const Home: NextPage = () => {
 
         {/* Honors and Awards Section */}
         <section id="honors" className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Honors and Awards</h2>
+          <h2 className="text-2xl font-bold mb-4">Honors and Awards 🏆</h2>
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="space-y-4">
               {honorsData.map((honor, index) => (
