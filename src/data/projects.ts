@@ -1,12 +1,15 @@
 export interface Project {
   title: string;
   description: string;
+  image?: string;
   startDate: string;
   endDate?: string;
   role: string;
   technologies: string[];
-  link?: string;
-  image?: string;
+  links?: {
+    github?: string;
+    demo?: string;
+  };
 }
 
 export interface ProjectsData {
@@ -22,6 +25,7 @@ export const projectsData: ProjectsData = {
       startDate: "2025-03",
       role: "Lead Researcher",
       technologies: ["Python", "PyTorch", "Signal Processing"],
+      image: "/images/projects/ppg.png",
       // link: "https://github.com/gn0219/gesture-navigation"
     },
     {
@@ -30,7 +34,17 @@ export const projectsData: ProjectsData = {
       startDate: "2024-08",
       endDate: "2025-06",
       role: "Lead Researcher",
-      technologies: ["Figma", "User Study"]
+      technologies: ["Figma", "User Study", "Visualization"],
+      image: "/images/projects/report.png",
+      // link: "https://github.com/gn0219/gesture-navigation"
+    },
+    {
+      title: "Developing a mood detection model using Multi-Modal Data",
+      description: "Developing a mood detection model using Multi-Modal Data",
+      startDate: "2024-08",
+      endDate: "2025-06",
+      role: "Developed Deep Learning Model",
+      technologies: ["Python", "PyTorch", "Speech Emotion Recognition"],
       // link: "https://github.com/gn0219/gesture-navigation"
     },
   ],

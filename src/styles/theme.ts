@@ -28,7 +28,7 @@ export const theme = {
   // Typography
   typography: {
     fontFamily: {
-      sans: ['Inter', 'sans-serif'],
+      sans: ['Pretendard', 'sans-serif'],
     },
     fontSize: {
       xs: '0.75rem',    // 12px
@@ -75,7 +75,7 @@ export const theme = {
   // Links
   links: {
     lab: {
-      default: '#1F5AEF',  // indigo-600
+      default: '#1E40AF',  // indigo-600
       hover: '#6F98FF'     // indigo-500
     },
     navigation: {
@@ -93,6 +93,14 @@ export const theme = {
     publication: {
       default: '#7C3AED',  // violet-600
       hover: '#6D28D9'     // violet-700
+    },
+    university: {
+      default: '#3F3F3F',  // sky-600
+      hover: '#6F98FF'     // sky-700
+    },
+    department: {
+      default: '#3F3F3F',  // cyan-600
+      hover: '#6F98FF'     // cyan-700
     }
   },
 }; 

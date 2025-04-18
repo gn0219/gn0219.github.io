@@ -14,7 +14,10 @@ export interface Profile {
   };
   education: {
     degree: string;
+    department: string;
+    departmentUrl: string;
     institution: string;
+    institutionUrl: string;
     year: string;
   }[];
   skills: string[];
@@ -34,7 +37,7 @@ export interface Profile {
 
 export const profileData: Profile = {
   name: "Gyuna Kim",
-  title: "Master Student",
+  title: "HCI Researcher",
   email: "gyuna.kim@kaist.ac.kr",
   location: "Daejeon, Republic of Korea",
   bio: "Researching signals (wearable, speech, PPG) for digital health and mental well-being | M.S. student @ KAIST ICLab",
@@ -46,22 +49,29 @@ export const profileData: Profile = {
   },
   education: [
     {
-      degree: "M.S. in Graduate School of Data Science",
+      degree: "M.S.",
+      department: "Graduate School of Data Science",
+      departmentUrl: "https://gsds.kaist.ac.kr/",
       institution: "KAIST",
+      institutionUrl: "https://www.kaist.ac.kr/",
       year: "2024 - Present"
     },
     {
-      degree: "B.S. in Industrial Engineering",
+      degree: "B.S.",
+      department: "Industrial Engineering",
+      departmentUrl: "https://ie.unist.ac.kr/",
       institution: "UNIST",
+      institutionUrl: "https://www.unist.ac.kr/",
       year: "2020 - 2024"
     }
   ],
   skills: [
-    "HCI",
+    "Human-Computer Interaction",
     "Multimodal Data Analysis",
+    "Machine Learning/Deep Learning",
+    "Digital Phenotyping",
     "Signal Processing",
-    "Machine Learning",
-    "Deep Learning"
+    "Visual Analytics"
   ],
   about: `My research touches on various aspects of digital health, from modeling human states using multimodal data to enhancing physiological signal quality and designing evaluative tools. While the specific topics vary, they all share a common goal: leveraging everyday data and technologies to promote better health outcomes.
 

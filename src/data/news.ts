@@ -12,6 +12,11 @@ export const newsData: NewsItem[] = [
     description: "I will be attending CHI conference 2025 in Yokohama, Japan"
   },
   {
+    date: "2024-07",
+    title: "SIGCHI Local Chapter",
+    description: "I visited Korea SIGCHI Local Chapter in August 2024"
+  },
+  {
     date: "2024-02",
     title: "News will be updated in ICLab",
     description: "I started my master's degree at KAIST in February 2024"

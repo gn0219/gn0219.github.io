@@ -14,6 +14,8 @@ import { theme } from '@/styles/theme';
 
 const Home: NextPage = () => {
   const [activeSection, setActiveSection] = useState('about');
+  const [showEmailTooltip, setShowEmailTooltip] = useState(false);
+  const [showCopySuccess, setShowCopySuccess] = useState(false);
   const sections = useRef<{ [key: string]: IntersectionObserverEntry }>({});
   const headerHeight = parseInt(theme.spacing.headerHeight);
 
@@ -54,20 +56,45 @@ const Home: NextPage = () => {
   }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+    const start = window.pageYOffset;
+    const duration = 500;
+    let startTime: number | null = null;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+    const easeOutCubic = (t: number): number => {
+      return 1 - Math.pow(1 - t, 3);
+    };
+
+    const animation = (currentTime: number) => {
+      if (startTime === null) startTime = currentTime;
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      
+      const target = sectionId === 'aboutme' ? 0 : 
+        (document.getElementById(sectionId)?.offsetTop ?? 0) - headerHeight - 32;
+      const distance = target - start;
+      
+      window.scrollTo(0, start + (distance * easeOutCubic(progress)));
+
+      if (timeElapsed < duration) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
+  const copyEmailToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText('gyuna.kim@kaist.ac.kr');
+      setShowCopySuccess(true);
+      setTimeout(() => setShowCopySuccess(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy email:', err);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-inter">
+    <div className="min-h-screen bg-gray-50 font-[Pretendard]">
       <Head>
         <title>{profileData.name} - Personal Homepage</title>
         <meta name="description" content={`${profileData.name}'s personal homepage`} />
@@ -90,23 +117,27 @@ const Home: NextPage = () => {
               </div>
               <span className="text-xl font-bold">{profileData.name}</span>
             </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              {['about me', 'research'].map((section) => (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section.replace(' ', ''))}
-                  className={`text-gray-600 hover:text-blue-600 transition-colors duration-200 text-base font-medium ${
-                    activeSection === section.replace(' ', '') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : ''
-                  }`}
-                >
-                  {section.charAt(0).toUpperCase() + section.slice(1)}
-                </button>
-              ))}
+            <nav className="flex items-center">
+              {/* Navigation buttons - only visible on md and larger screens */}
+              <div className="hidden md:flex items-center space-x-8 mr-4">
+                {['about me', 'research'].map((section) => (
+                  <button
+                    key={section}
+                    onClick={() => scrollToSection(section.replace(' ', ''))}
+                    className={`text-gray-600 hover:text-blue-600 text-base font-medium ${
+                      activeSection === section.replace(' ', '') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : ''
+                    }`}
+                  >
+                    {section.charAt(0).toUpperCase() + section.slice(1)}
+                  </button>
+                ))}
+              </div>
+              {/* CV button - always visible */}
               <a
-                href="/cv.pdf" // You'll need to add your CV file to the public folder
+                href="/cv.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium"
+                className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-sm md:text-base"
               >
                 CV
               </a>
@@ -161,6 +192,31 @@ const Home: NextPage = () => {
                       </svg>
                     </a>
                   )}
+                  <div className="relative">
+                    <button
+                      onClick={copyEmailToClipboard}
+                      onMouseEnter={() => setShowEmailTooltip(true)}
+                      onMouseLeave={() => setShowEmailTooltip(false)}
+                      className="text-gray-600 hover:text-gray-900 transition-colors"
+                      aria-label="Copy email address"
+                    >
+                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
+                      </svg>
+                    </button>
+                    {/* Email Tooltip */}
+                    {showEmailTooltip && (
+                      <div className="absolute top-full left-0 transform -translate-x-1/4 mt-1 px-3 py-1 bg-gray-900 text-white text-sm rounded whitespace-nowrap">
+                        Copy - {profileData.email}
+                      </div>
+                    )}
+                    {/* Copy Success Message */}
+                    {showCopySuccess && (
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-3 py-1 bg-green-600 text-white text-sm rounded whitespace-nowrap">
+                        Email Copied!
+                      </div>
+                    )}
+                  </div>
                   {profileData.socialLinks.linkedin && (
                     <a 
                       href={profileData.socialLinks.linkedin} 
@@ -212,8 +268,45 @@ const Home: NextPage = () => {
               <div className="space-y-4">
                 {profileData.education.map((edu, index) => (
                   <div key={index}>
-                    <p className="font-semibold">{edu.degree}</p>
-                    <p className="text-gray-600">{edu.institution}</p>
+                    <p className="font-semibold">
+                      {edu.degree} in{' '}
+                      <a 
+                        href={edu.departmentUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors duration-200"
+                        style={{
+                          color: theme.links.department.default,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme.links.department.hover;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = theme.links.department.default;
+                        }}
+                      >
+                        {edu.department}
+                      </a>
+                    </p>
+                    <p className="text-gray-600">
+                      <a 
+                        href={edu.institutionUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors duration-200"
+                        style={{
+                          color: theme.links.university.default,
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.color = theme.links.university.hover;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.color = theme.links.university.default;
+                        }}
+                      >
+                        {edu.institution}
+                      </a>
+                    </p>
                     <p className="text-gray-500">{edu.year}</p>
                   </div>
                 ))}
@@ -235,7 +328,7 @@ const Home: NextPage = () => {
         {/* News Section */}
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">News ✨</h2>
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="space-y-4">
               {newsData.map((news, index) => (
                 <div key={index} className="flex items-start">
@@ -252,11 +345,11 @@ const Home: NextPage = () => {
         </section>
 
         {/* Research Interests Section */}
-        <section id="research" className="mb-12">
+        <section id="research" className="mb-12 scroll-mt-24">
           <h2 className="text-2xl font-bold mb-4">Research Interests</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {researchData.interests.map((interest, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
                 <h3 className="text-xl font-semibold mb-2">{interest.title}</h3>
                 <p className="text-gray-600 mb-4">{interest.description}</p>
                 <div className="flex flex-wrap gap-2">
@@ -276,21 +369,24 @@ const Home: NextPage = () => {
           <h2 className="text-2xl font-bold mb-6 font-lora">Projects</h2>
           <div className="grid grid-cols-1 gap-8">
             {projectsData.current.map((project, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden"> 
                 <div className="flex flex-col md:flex-row">
-                  {project.image && (
-                    <div className="md:w-1/3">
-                      <div className="relative h-64 md:h-full">
+                  {project.image ? (
+                    // Left column with image
+                    <div className="md:w-2/5 lg:w-3/7 h-72 md:h-auto relative bg-white flex items-center justify-center p-4">
+                      <div className="relative w-full h-full">
                         <Image
                           src={project.image}
                           alt={project.title}
                           layout="fill"
-                          objectFit="cover"
+                          objectFit="contain"
+                          className="rounded-lg"
                         />
                       </div>
                     </div>
-                  )}
-                  <div className="flex-1 p-6">
+                  ) : null}
+                  {/* Right column with content - adjusts width based on image presence */}
+                  <div className={`flex-1 p-6 ${!project.image ? 'md:p-8' : ''}`}>
                     <h3 className="text-xl font-bold mb-4 font-lora">{project.title}</h3>
                     <p className="text-gray-600 mb-4">{project.description}</p>
                     <div className="space-y-4">
@@ -303,7 +399,7 @@ const Home: NextPage = () => {
                         <span>{project.role}</span>
                       </div>
                       <div className="flex items-start">
-                        <span className="w-20 text-gray-500 mt-1">Tools:</span>
+                        <span className="w-20 text-gray-500 mt-1">Skills:</span>
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech, idx) => (
                             <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
@@ -312,6 +408,35 @@ const Home: NextPage = () => {
                           ))}
                         </div>
                       </div>
+                      {project.links && (
+                        <div className="flex items-start pt-2">
+                          <span className="w-20 text-gray-500">Links:</span>
+                          <div className="flex gap-4">
+                            {project.links.github && (
+                              <a
+                                href={project.links.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-gray-600 hover:text-gray-900 transition-colors"
+                              >
+                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                                </svg>
+                              </a>
+                            )}
+                            {project.links.demo && (
+                              <a
+                                href={project.links.demo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:text-blue-800 transition-colors"
+                              >
+                                Demo →
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -326,7 +451,7 @@ const Home: NextPage = () => {
             <h2 className="text-2xl font-bold mb-4">Publications</h2>
             <div className="space-y-6">
               {publicationsData.publications.map((publication, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+                <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold mb-2">{publication.title}</h3>
                   <p className="text-gray-600 mb-2">
                     {publication.authors.join(', ')} - {publication.venue} ({publication.year})
@@ -350,7 +475,7 @@ const Home: NextPage = () => {
         {/* Honors and Awards Section */}
         <section id="honors" className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Honors and Awards</h2>
-          <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="space-y-4">
               {honorsData.map((honor, index) => (
                 <div key={index} className="flex items-start gap-4">
@@ -373,7 +498,7 @@ const Home: NextPage = () => {
             <h2 className="text-2xl font-bold mb-4">Services</h2>
             <div className="space-y-8">
               {servicesData.map((service, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+                <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
                   <h3 className="text-xl font-semibold mb-4">{service.category}</h3>
                   <div className="space-y-4">
                     {service.items.map((item, idx) => (
@@ -397,7 +522,7 @@ const Home: NextPage = () => {
           <h2 className="text-2xl font-bold mb-4">Teaching Experience</h2>
           <div className="space-y-8">
             {teachingData.map((experience, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
                 <h3 className="text-xl font-semibold mb-4">{experience.role}</h3>
                 <div className="space-y-4">
                   {experience.courses.map((course, idx) => (
@@ -417,7 +542,7 @@ const Home: NextPage = () => {
 
         {/* Footer */}
         <footer className="mt-16 pb-8 text-center text-gray-500">
-          <p>© Gyuna Kim. All rights reserved.</p>
+          <p>© 2025 Gyuna Kim. All rights reserved.</p>
         </footer>
       </main>
     </div>
