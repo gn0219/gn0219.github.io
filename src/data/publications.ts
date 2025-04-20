@@ -17,17 +17,17 @@ export interface PublicationsData {
 
 export const publicationsData: PublicationsData = {
   publications: [
-    {
-      title: "Voice-Controlled Smart Home Interfaces for Elderly Users",
-      authors: ["Gyuna Kim", "Robert Brown", "Sarah Wilson"],
-      venue: "Accessibility",
-      year: "2021",
-      type: "conference",
-      doi: "10.1145/3441852.3471234",
-      slides: "/images/publications/slides.pdf",
-      poster: "/images/publications/poster.pdf",
-      video: "/images/publications/video.mp4",
-    },
+    // {
+    //   title: "Voice-Controlled Smart Home Interfaces for Elderly Users",
+    //   authors: ["Gyuna Kim", "Robert Brown", "Sarah Wilson"],
+    //   venue: "Accessibility",
+    //   year: "2021",
+    //   type: "conference",
+    //   doi: "10.1145/3441852.3471234",
+    //   slides: "/images/publications/slides.pdf",
+    //   poster: "/images/publications/poster.pdf",
+    //   video: "/images/publications/video.mp4",
+    // },
     // {
     //   title: "Signal Processing for Wearable Devices",
     //   authors: ["Gyuna Kim",],

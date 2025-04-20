@@ -41,7 +41,7 @@ export const profileData: Profile = {
   email: "gyuna.kim@kaist.ac.kr",
   location: "Daejeon, Republic of Korea",
   bio: "Researching signals (wearable, speech, PPG) for digital health and mental well-being | M.S. student @ KAIST ICLab",
-  image: "/images/profile.jpg",
+  image: "/images/photos/profile.jpg",
   socialLinks: {
     github: "https://github.com/gn0219",
     linkedin: "https://www.linkedin.com/in/gyuna/",

@@ -24,6 +24,7 @@ const Home: NextPage = () => {
   const headerHeight = parseInt(theme.spacing.headerHeight);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isAutoPlayPaused, setIsAutoPlayPaused] = useState(false);
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -66,6 +67,8 @@ const Home: NextPage = () => {
 
   // Auto-sliding photos
   useEffect(() => {
+    if (isAutoPlayPaused) return;
+    
     const interval = setInterval(() => {
       setCurrentPhotoIndex((prevIndex) => 
         prevIndex === 0 ? photosData.length - 1 : prevIndex - 1
@@ -73,7 +76,7 @@ const Home: NextPage = () => {
     }, 5000); // Change photo every 5 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isAutoPlayPaused]);
 
   const scrollToSection = (sectionId: string) => {
     const start = window.pageYOffset;
@@ -159,7 +162,7 @@ const Home: NextPage = () => {
                   className="rounded-full"
                 />
               </div>
-              <span className="text-xl font-bold">{profileData.name}</span>
+              <span className="text-xl font-semibold">{profileData.name}</span>
             </div>
             <nav className="flex items-center">
               {/* Navigation buttons - only visible on md and larger screens */}
@@ -208,12 +211,12 @@ const Home: NextPage = () => {
                 />
               </div>
               <div className="text-center md:text-left space-y-2">
-                <div className="space-y-1">
+                <div className="space-y-2">
                   <h1 className="text-xl font-bold font-lora text-gray-900">{profileData.name}</h1>
                   <p className="text-base text-gray-700 leading-snug">{profileData.title}</p>
                   <p className="text-sm text-gray-500 leading-snug">{profileData.location}</p>
                 </div>
-                <div className="flex gap-3 justify-center md:justify-start pt-2.5">
+                <div className="flex gap-4 justify-center md:justify-start pt-2.5">
                   {/* <a 
                     href={profileData.socialLinks.scholar}
                     target="_blank" 
@@ -294,7 +297,7 @@ const Home: NextPage = () => {
                           href={url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="transition-colors duration-200 font-bold"
+                          className="transition-colors duration-200 font-semibold"
                           style={{
                             color: theme.links[linkColor].default,
                           }}
@@ -320,7 +323,7 @@ const Home: NextPage = () => {
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-semibold mb-4 font-lora">Education</h3>
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {profileData.education.map((edu, index) => (
                   <div key={index}>
                     <p className="font-semibold">
@@ -329,7 +332,7 @@ const Home: NextPage = () => {
                         href={edu.departmentUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="transition-colors duration-200 font-bold"
+                        className="transition-colors duration-200 font-semibold"
                         style={{
                           color: theme.links.department.default,
                         }}
@@ -470,7 +473,7 @@ const Home: NextPage = () => {
                         </span>
                       ))}
                     </p>
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-1">
                       <p className="text-sm text-gray-600 leading-tight">
                         {publication.venue} {publication.year}
                       </p>
@@ -557,7 +560,7 @@ const Home: NextPage = () => {
                   ) : null}
                   {/* Right column with content - adjusts width based on image presence */}
                   <div className={`flex-1 p-6 ${!project.image ? 'md:p-8' : ''}`}>
-                    <h3 className="text-xl font-bold mb-4 font-lora">{project.title}</h3>
+                    <h3 className="text-xl font-semibold mb-4 font-lora">{project.title}</h3>
                     <p className="text-gray-600 mb-4">
                       {project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
                         if (i % 4 === 0) return part;
@@ -754,7 +757,7 @@ const Home: NextPage = () => {
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
             >
-              <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center group">
                 <div className="relative w-full h-full">
                   <Image
                     src={photosData[currentPhotoIndex].src}
@@ -763,24 +766,48 @@ const Home: NextPage = () => {
                     className="object-cover transition-opacity duration-500"
                     priority
                   />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3">
                     <p className="text-white text-base font-medium">
                       {photosData[currentPhotoIndex].comment}
                     </p>
                   </div>
+                  {/* Controls - visible on hover */}
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-2">
+                    <button
+                      onClick={() => setCurrentPhotoIndex(prev => prev === photosData.length - 1 ? 0 : prev + 1)}
+                      className="bg-black/50 hover:bg-black/60 text-white rounded-md px-2 py-1.5 transition-all duration-200 hover:scale-105"
+                      aria-label="Previous photo"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => setIsAutoPlayPaused(!isAutoPlayPaused)}
+                      className="bg-black/50 hover:bg-black/60 text-white rounded-md px-2 py-1.5 transition-all duration-200 hover:scale-105"
+                      aria-label={isAutoPlayPaused ? "Play slideshow" : "Pause slideshow"}
+                    >
+                      {isAutoPlayPaused ? (
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                        </svg>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setCurrentPhotoIndex(prev => prev === 0 ? photosData.length - 1 : prev - 1)}
+                      className="bg-black/50 hover:bg-black/60 text-white rounded-md px-2 py-1.5 transition-all duration-200 hover:scale-105"
+                      aria-label="Next photo"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-              </div>
-              {/* Dot Indicators */}
-              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flex flex-row-reverse space-x-1.5 space-x-reverse">
-                {photosData.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPhotoIndex(index)}
-                    className={`w-2.5 h-2.5 rounded-full transition-colors duration-200 ${
-                      currentPhotoIndex === index ? 'bg-white' : 'bg-white/50'
-                    }`}
-                  />
-                ))}
               </div>
             </div>
 
