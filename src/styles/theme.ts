@@ -74,9 +74,13 @@ export const theme = {
 
   // Links
   links: {
-    lab: {
-      default: '#1E40AF',  // indigo-600
-      hover: '#6F98FF'     // indigo-500
+    university: {
+      default: '#555555',  // sky-600
+      hover: '#6F98FF'     // sky-700
+    },
+    department: {
+      default: '#555555',  // cyan-600
+      hover: '#6F98FF'     // cyan-700
     },
     navigation: {
       default: '#4B5563',  // gray-600
@@ -86,21 +90,25 @@ export const theme = {
       default: '#3B82F6',  // blue-600
       hover: '#2563EB'     // blue-700
     },
-    project: {
-      default: '#059669',  // emerald-600
-      hover: '#047857'     // emerald-700
+    blue: {
+      default: '#2866FF',  
+      hover: '#6F98FF'     
     },
-    publication: {
-      default: '#7C3AED',  // violet-600
-      hover: '#6D28D9'     // violet-700
+    green: {
+      default: '#059669',  
+      hover: '#07CD60'     
     },
-    university: {
-      default: '#3F3F3F',  // sky-600
-      hover: '#6F98FF'     // sky-700
+    purple: {
+      default: '#7C3AED',  
+      hover: '#8B75D7'     
     },
-    department: {
-      default: '#3F3F3F',  // cyan-600
-      hover: '#6F98FF'     // cyan-700
-    }
+    pink: {
+      default: '#FF3A88',  
+      hover: '#FF88C4'     
+    },
+    dark_brown: {
+      default: '#6D1202',  
+      hover: '#B14A14'     
+    },
   },
 }; 

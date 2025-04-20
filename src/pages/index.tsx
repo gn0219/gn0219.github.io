@@ -8,16 +8,25 @@ import { publicationsData } from '@/data/publications';
 import { newsData } from '@/data/news';
 import { honorsData } from '@/data/honors';
 import { servicesData } from '@/data/services';
-import { teachingData } from '@/data/teaching';
-import { useState, useEffect, useRef } from 'react';
+import { experienceData } from '@/data/experience';
+import { photosData } from '@/data/photos';
+import { useState, useEffect, useRef, TouchEvent } from 'react';
 import { theme } from '@/styles/theme';
+
+type ValidLinkColor = keyof typeof theme.links;
 
 const Home: NextPage = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [showEmailTooltip, setShowEmailTooltip] = useState(false);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const sections = useRef<{ [key: string]: IntersectionObserverEntry }>({});
   const headerHeight = parseInt(theme.spacing.headerHeight);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,6 +62,17 @@ const Home: NextPage = () => {
     return () => {
       sectionElements.forEach((section) => observer.unobserve(section));
     };
+  }, []);
+
+  // Auto-sliding photos
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentPhotoIndex((prevIndex) => 
+        prevIndex === 0 ? photosData.length - 1 : prevIndex - 1
+      );
+    }, 5000); // Change photo every 5 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   const scrollToSection = (sectionId: string) => {
@@ -93,6 +113,30 @@ const Home: NextPage = () => {
     }
   };
 
+  const onTouchStart = (e: TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      setCurrentPhotoIndex(prev => prev === 0 ? photosData.length - 1 : prev - 1);
+    }
+    if (isRightSwipe) {
+      setCurrentPhotoIndex(prev => prev === photosData.length - 1 ? 0 : prev + 1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 font-[Pretendard]">
       <Head>
@@ -120,7 +164,7 @@ const Home: NextPage = () => {
             <nav className="flex items-center">
               {/* Navigation buttons - only visible on md and larger screens */}
               <div className="hidden md:flex items-center space-x-8 mr-4">
-                {['about me', 'research'].map((section) => (
+                {['about me', 'research', 'etc', 'photos'].map((section) => (
                   <button
                     key={section}
                     onClick={() => scrollToSection(section.replace(' ', ''))}
@@ -153,7 +197,7 @@ const Home: NextPage = () => {
         <section id="aboutme" className="mb-12">
           <div className="flex flex-col md:flex-row items-start gap-16">
             {/* Left Column: Profile Image + Simple Info */}
-            <div className="flex flex-col items-center md:items-start space-y-6 flex-shrink-0 w-full md:w-auto">
+            <div className="flex flex-col items-center md:items-start space-y-5 flex-shrink-0 w-full md:w-auto">
               <div className="w-64 h-64 relative rounded-full overflow-hidden">
                 <Image
                   src={profileData.image}
@@ -163,13 +207,13 @@ const Home: NextPage = () => {
                   className="rounded-full"
                 />
               </div>
-              <div className="text-center md:text-left space-y-3">
-                <div className="space-y-2">
-                  <h1 className="text-2xl font-bold font-lora">{profileData.name}</h1>
-                  <p className="text-lg text-gray-600">{profileData.title}</p>
-                  <p className="text-gray-600">{profileData.location}</p>
+              <div className="text-center md:text-left space-y-2">
+                <div className="space-y-1">
+                  <h1 className="text-xl font-bold font-lora text-gray-900">{profileData.name}</h1>
+                  <p className="text-base text-gray-700 leading-snug">{profileData.title}</p>
+                  <p className="text-sm text-gray-500 leading-snug">{profileData.location}</p>
                 </div>
-                <div className="flex gap-4 justify-center md:justify-start pt-4">
+                <div className="flex gap-3 justify-center md:justify-start pt-2.5">
                   {/* <a 
                     href={profileData.socialLinks.scholar}
                     target="_blank" 
@@ -185,9 +229,9 @@ const Home: NextPage = () => {
                       href={profileData.socialLinks.github} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="text-gray-600 hover:text-gray-900 transition-colors"
+                      className="text-gray-500 hover:text-gray-800 transition-colors"
                     >
-                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
                       </svg>
                     </a>
@@ -197,22 +241,22 @@ const Home: NextPage = () => {
                       onClick={copyEmailToClipboard}
                       onMouseEnter={() => setShowEmailTooltip(true)}
                       onMouseLeave={() => setShowEmailTooltip(false)}
-                      className="text-gray-600 hover:text-gray-900 transition-colors"
+                      className="text-gray-500 hover:text-gray-800 transition-colors"
                       aria-label="Copy email address"
                     >
-                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
                       </svg>
                     </button>
                     {/* Email Tooltip */}
                     {showEmailTooltip && (
-                      <div className="absolute top-full left-0 transform -translate-x-1/4 mt-1 px-3 py-1 bg-gray-900 text-white text-sm rounded whitespace-nowrap">
+                      <div className="absolute top-full left-0 transform -translate-x-1/4 mt-1 px-2 py-0.5 bg-gray-800 text-white text-xs rounded whitespace-nowrap">
                         Copy - {profileData.email}
                       </div>
                     )}
                     {/* Copy Success Message */}
                     {showCopySuccess && (
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-3 py-1 bg-green-600 text-white text-sm rounded whitespace-nowrap">
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-0.5 bg-green-600 text-white text-xs rounded whitespace-nowrap">
                         Email Copied!
                       </div>
                     )}
@@ -222,9 +266,9 @@ const Home: NextPage = () => {
                       href={profileData.socialLinks.linkedin} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                      className="text-gray-500 hover:text-blue-700 transition-colors"
                     >
-                      <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                       </svg>
                     </a>
@@ -237,26 +281,37 @@ const Home: NextPage = () => {
             <div className="flex-grow">
               <h2 className="text-5xl font-bold mb-6 font-lora">Hi everyone! 👋</h2>
               <div className="prose max-w-none text-gray-700">
-                <p>I am a master's student at {' '}
-                  <a 
-                    href={profileData.lab.url}
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="font-semibold"
-                    style={{
-                      color: theme.links.lab.default,
-                      transition: 'color 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = theme.links.lab.hover;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = theme.links.lab.default;
-                    }}
-                  >
-                    {profileData.lab.name}
-                  </a>
-                  , advised by {profileData.lab.advisor}. {profileData.about}</p>
+                <p>
+                  {profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
+                    if (i % 4 === 0) return part;
+                    if (i % 4 === 1) {
+                      const url = profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
+                      const color = profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
+                      const linkColor = color && theme.links[color] ? color : 'social';
+                      return (
+                        <a
+                          key={i}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="transition-colors duration-200 font-bold"
+                          style={{
+                            color: theme.links[linkColor].default,
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = theme.links[linkColor].hover;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = theme.links[linkColor].default;
+                          }}
+                        >
+                          {part}
+                        </a>
+                      );
+                    }
+                    return null;
+                  })}
+                </p>
               </div>
             </div>
           </div>
@@ -274,7 +329,7 @@ const Home: NextPage = () => {
                         href={edu.departmentUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="transition-colors duration-200"
+                        className="transition-colors duration-200 font-bold"
                         style={{
                           color: theme.links.department.default,
                         }}
@@ -336,7 +391,37 @@ const Home: NextPage = () => {
                     <p className="font-bold text-gray-800">{news.date}</p>
                   </div>
                   <div className="flex-grow">
-                    <p className="text-gray-700">{news.description}</p>
+                    <p className="text-gray-700">
+                      {news.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
+                        if (i % 4 === 0) return part;
+                        if (i % 4 === 1) {
+                          const url = news.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
+                          const color = news.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
+                          const linkColor = color && theme.links[color] ? color : 'social';
+                          return (
+                            <a
+                              key={i}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="transition-colors duration-200"
+                              style={{
+                                color: theme.links[linkColor].default,
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = theme.links[linkColor].hover;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = theme.links[linkColor].default;
+                              }}
+                            >
+                              {part}
+                            </a>
+                          );
+                        }
+                        return null;
+                      })}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -364,6 +449,91 @@ const Home: NextPage = () => {
           </div>
         </section>
 
+        {/* Publications Section - Hidden if empty */}
+        {publicationsData.publications.length > 0 && (
+          <section id="publications" className="mb-12">
+            <h2 className="text-2xl font-bold mb-6">Publications</h2>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="space-y-6">
+                {publicationsData.publications.map((publication, index) => (
+                  <div key={index} className="space-y-2">
+                    <h3 className="text-lg font-semibold leading-tight">{publication.title}</h3>
+                    <p className="text-sm text-gray-600 leading-tight">
+                      {publication.authors.map((author, i) => (
+                        <span key={i}>
+                          {author === profileData.name ? (
+                            <span className="text-black underline">{author}</span>
+                          ) : (
+                            author
+                          )}
+                          {i < publication.authors.length - 1 ? ', ' : ''}
+                        </span>
+                      ))}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-sm text-gray-600 leading-tight">
+                        {publication.venue} {publication.year}
+                      </p>
+                      {publication.doi && (
+                        <a
+                          href={`https://doi.org/${publication.doi}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition-colors duration-200"
+                        >
+                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Paper
+                        </a>
+                      )}
+                      {publication.slides && (
+                        <a
+                          href={publication.slides}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-md hover:bg-yellow-200 transition-colors duration-200"
+                        >
+                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                          </svg>
+                          Slides
+                        </a>
+                      )}
+                      {publication.poster && (
+                        <a
+                          href={publication.poster}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-violet-700 bg-violet-100 rounded-md hover:bg-violet-200 transition-colors duration-200"
+                        >
+                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Poster
+                        </a>
+                      )}
+                      {publication.video && (
+                        <a
+                          href={publication.video}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-pink-700 bg-pink-100 rounded-md hover:bg-pink-200 transition-colors duration-200"
+                        >
+                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                          </svg>
+                          Video
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Projects Section */}
         <section id="projects" className="mb-12">
           <h2 className="text-2xl font-bold mb-6 font-lora">Projects</h2>
@@ -388,7 +558,37 @@ const Home: NextPage = () => {
                   {/* Right column with content - adjusts width based on image presence */}
                   <div className={`flex-1 p-6 ${!project.image ? 'md:p-8' : ''}`}>
                     <h3 className="text-xl font-bold mb-4 font-lora">{project.title}</h3>
-                    <p className="text-gray-600 mb-4">{project.description}</p>
+                    <p className="text-gray-600 mb-4">
+                      {project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
+                        if (i % 4 === 0) return part;
+                        if (i % 4 === 1) {
+                          const url = project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
+                          const color = project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
+                          const linkColor = color && theme.links[color] ? color : 'project';
+                          return (
+                            <a
+                              key={i}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="transition-colors duration-200"
+                              style={{
+                                color: theme.links[linkColor].default,
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = theme.links[linkColor].hover;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = theme.links[linkColor].default;
+                              }}
+                            >
+                              {part}
+                            </a>
+                          );
+                        }
+                        return null;
+                      })}
+                    </p>
                     <div className="space-y-4">
                       <div className="flex items-center">
                         <span className="w-20 text-gray-500">Period:</span>
@@ -445,35 +645,8 @@ const Home: NextPage = () => {
           </div>
         </section>
 
-        {/* Publications Section - Hidden if empty */}
-        {publicationsData.publications.length > 0 && (
-          <section id="publications" className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Publications</h2>
-            <div className="space-y-6">
-              {publicationsData.publications.map((publication, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-                  <h3 className="text-xl font-semibold mb-2">{publication.title}</h3>
-                  <p className="text-gray-600 mb-2">
-                    {publication.authors.join(', ')} - {publication.venue} ({publication.year})
-                  </p>
-                  {publication.doi && (
-                    <a
-                      href={`https://doi.org/${publication.doi}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
-                    >
-                      View Publication →
-                    </a>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
         {/* Honors and Awards Section */}
-        <section id="honors" className="mb-12">
+        <section id="etc" className="mb-12 scroll-mt-24">
           <h2 className="text-2xl font-bold mb-4">Honors and Awards 🏆</h2>
           <div className="bg-white p-6 rounded-lg shadow-sm">
             <div className="space-y-4">
@@ -489,6 +662,59 @@ const Home: NextPage = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Experience Section */}
+        <section id="experience" className="mb-12 scroll-mt-24">
+          <h2 className="text-2xl font-bold mb-4">Experience</h2>
+          <div className="space-y-8">
+            {experienceData.map((experience, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+                <h3 className="text-xl font-semibold mb-4">{experience.role}</h3>
+                <div className="space-y-4">
+                  {experience.experiences.map((experience, idx) => (
+                    <div key={idx} className="flex justify-between items-start">
+                      <div>
+                        <h4 className="font-semibold">{experience.title}</h4>
+                        <p className="text-gray-600">
+                          {experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
+                            if (i % 4 === 0) return part;
+                            if (i % 4 === 1) {
+                              const url = experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
+                              const colorParam = experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2];
+                              const color = (colorParam && Object.keys(theme.links).includes(colorParam) ? colorParam : 'university') as ValidLinkColor;
+                              return (
+                                <a
+                                  key={i}
+                                  href={url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="transition-colors duration-200"
+                                  style={{
+                                    color: theme.links[color].default,
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.color = theme.links[color].hover;
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.color = theme.links[color].default;
+                                  }}
+                                >
+                                  {part}
+                                </a>
+                              );
+                            }
+                            return null;
+                          })}
+                        </p>
+                      </div>
+                      <span className="text-gray-500">{experience.year}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -517,32 +743,75 @@ const Home: NextPage = () => {
           </section>
         )}
 
-        {/* Teaching Experience Section */}
-        <section id="teaching" className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">Teaching Experience</h2>
-          <div className="space-y-8">
-            {teachingData.map((experience, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-xl font-semibold mb-4">{experience.role}</h3>
-                <div className="space-y-4">
-                  {experience.courses.map((course, idx) => (
-                    <div key={idx} className="flex justify-between items-start">
-                      <div>
-                        <h4 className="font-semibold">{course.title}</h4>
-                        <p className="text-gray-600">{course.institution}</p>
-                      </div>
-                      <span className="text-gray-500">{course.year}</span>
-                    </div>
-                  ))}
+        {/* Photos Section */}
+        <section id="photos" className="mb-12 scroll-mt-24">
+          <h2 className="text-2xl font-bold mb-4 font-lora">Photos 📸</h2>
+          <div className="flex flex-col md:flex-row gap-3">
+            {/* Main Photo */}
+            <div 
+              className="w-full md:flex-1 h-[280px] md:h-[360px] relative overflow-hidden rounded-lg shadow-sm order-1 md:order-2"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-full h-full">
+                  <Image
+                    src={photosData[currentPhotoIndex].src}
+                    alt={`Photo ${photosData.length - currentPhotoIndex}`}
+                    fill
+                    className="object-cover transition-opacity duration-500"
+                    priority
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                    <p className="text-white text-base font-medium">
+                      {photosData[currentPhotoIndex].comment}
+                    </p>
+                  </div>
                 </div>
               </div>
-            ))}
+              {/* Dot Indicators */}
+              <div className="absolute bottom-14 left-1/2 transform -translate-x-1/2 flex flex-row-reverse space-x-1.5 space-x-reverse">
+                {photosData.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentPhotoIndex(index)}
+                    className={`w-2.5 h-2.5 rounded-full transition-colors duration-200 ${
+                      currentPhotoIndex === index ? 'bg-white' : 'bg-white/50'
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Thumbnails - Vertical on desktop, Horizontal on mobile */}
+            <div className="w-full md:w-16 flex-shrink-0 order-2 md:order-1">
+              <div className="h-16 md:h-[360px] overflow-x-auto md:overflow-y-auto flex flex-row md:flex-col gap-1.5 pb-1.5 md:pb-0 md:pr-1.5 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+                {[...photosData].reverse().map((photo, index) => (
+                  <button
+                    key={photosData.length - 1 - index}
+                    onClick={() => setCurrentPhotoIndex(photosData.length - 1 - index)}
+                    className={`w-16 md:w-full aspect-square relative rounded-md overflow-hidden transition-transform duration-200 hover:scale-105 flex-shrink-0 ${
+                      currentPhotoIndex === (photosData.length - 1 - index) ? 'ring-2 ring-blue-500' : ''
+                    }`}
+                  >
+                    <Image
+                      src={photo.src}
+                      alt={`Thumbnail ${photosData.length - index}`}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 64px, 64px"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Footer */}
         <footer className="mt-16 pb-8 text-center text-gray-500">
-          <p>© 2025 Gyuna Kim. All rights reserved.</p>
+          <p>Copyright © 2025 Gyuna Kim. All rights reserved.</p>
         </footer>
       </main>
     </div>

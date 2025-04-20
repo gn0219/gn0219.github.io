@@ -54,7 +54,7 @@ export const profileData: Profile = {
       departmentUrl: "https://gsds.kaist.ac.kr/",
       institution: "KAIST",
       institutionUrl: "https://www.kaist.ac.kr/",
-      year: "2024 - Present"
+      year: "2024.02 - Present"
     },
     {
       degree: "B.S.",
@@ -62,7 +62,7 @@ export const profileData: Profile = {
       departmentUrl: "https://ie.unist.ac.kr/",
       institution: "UNIST",
       institutionUrl: "https://www.unist.ac.kr/",
-      year: "2020 - 2024"
+      year: "2020.02 - 2024.02"
     }
   ],
   skills: [
@@ -73,9 +73,10 @@ export const profileData: Profile = {
     "Signal Processing",
     "Visual Analytics"
   ],
-  about: `My research touches on various aspects of digital health, from modeling human states using multimodal data to enhancing physiological signal quality and designing evaluative tools. While the specific topics vary, they all share a common goal: leveraging everyday data and technologies to promote better health outcomes.
-
-Ultimately, I hope to contribute to systems that make digital health support more effective, interpretable, and responsive across different contexts
+  about: `I am a master's student at [KAIST ICLab](https://ic.kaist.ac.kr/, color=blue), advised by Prof. Uichin Lee.
+  My research spans various areas of digital health — from modeling human states using multimodal data, to enhancing the quality of physiological signals, and designing evaluative tools.
+  While the specific topics differ, they all share a common goal: leveraging everyday data and technology to support better health outcomes.
+  Ultimately, I aim to help build systems that make digital health support more effective, interpretable, and adaptable across different contexts.
 `,
   interests: [
     "User Modeling",

@@ -6,6 +6,11 @@ export interface Honor {
 
 export const honorsData: Honor[] = [
   {
+    year: "2024",
+    title: "Graduate Research Fellowship for Master's Students",
+    organization: "National Research Foundation of Korea (NRF)"
+  },
+  {
     year: "2022",
     title: "Encouragement Prize, 2022 KAIST-POSTECH-UNIST Data Science Competition",
     organization: "KAIST"
@@ -17,7 +22,7 @@ export const honorsData: Honor[] = [
   },
   {
     year: "2021",
-    title: "Frist Prize, AI Challenger Program",
+    title: "First Prize, AI Challenger Program",
     organization: "UNIST"
   },
   {
