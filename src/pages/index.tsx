@@ -569,7 +569,7 @@ const Home: NextPage = () => {
                         if (i % 4 === 1) {
                           const url = project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
                           const color = project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
-                          const linkColor = color && theme.links[color] ? color : 'project';
+                          const linkColor = color && theme.links[color] ? color : 'green';
                           return (
                             <a
                               key={i}
