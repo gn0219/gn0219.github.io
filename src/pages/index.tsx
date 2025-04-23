@@ -150,7 +150,7 @@ const Home: NextPage = () => {
 
       {/* Header with Lora font for name */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 relative rounded-full overflow-hidden">
@@ -167,7 +167,7 @@ const Home: NextPage = () => {
             <nav className="flex items-center">
               {/* Navigation buttons - only visible on md and larger screens */}
               <div className="hidden md:flex items-center space-x-8 mr-4">
-                {['about me', 'research', 'etc', 'photos'].map((section) => (
+                {['about me', 'research'].map((section) => ( /*, 'etc', 'photos' */
                   <button
                     key={section}
                     onClick={() => scrollToSection(section.replace(' ', ''))}
@@ -302,6 +302,7 @@ const Home: NextPage = () => {
                           className="transition-colors duration-200 font-semibold"
                           style={{
                             color: theme.links[linkColor].default,
+                            textDecoration: 'underline',
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.color = theme.links[linkColor].hover;
@@ -337,6 +338,7 @@ const Home: NextPage = () => {
                         className="transition-colors duration-200 font-semibold"
                         style={{
                           color: theme.links.department.default,
+                          textDecoration: 'underline',
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.color = theme.links.department.hover;
@@ -356,6 +358,7 @@ const Home: NextPage = () => {
                         className="transition-colors duration-200"
                         style={{
                           color: theme.links.university.default,
+                          textDecoration: 'underline',
                         }}
                         onMouseEnter={(e) => {
                           e.currentTarget.style.color = theme.links.university.hover;
@@ -412,6 +415,7 @@ const Home: NextPage = () => {
                               className="transition-colors duration-200"
                               style={{
                                 color: theme.links[linkColor].default,
+                                textDecoration: 'underline',
                               }}
                               onMouseEnter={(e) => {
                                 e.currentTarget.style.color = theme.links[linkColor].hover;
@@ -579,6 +583,7 @@ const Home: NextPage = () => {
                               className="transition-colors duration-200"
                               style={{
                                 color: theme.links[linkColor].default,
+                                textDecoration: 'underline',
                               }}
                               onMouseEnter={(e) => {
                                 e.currentTarget.style.color = theme.links[linkColor].hover;
@@ -680,7 +685,7 @@ const Home: NextPage = () => {
                 <div className="space-y-4">
                   {experience.experiences.map((experience, idx) => (
                     <div key={idx} className="flex justify-between items-start">
-                      <div>
+                      <div className="flex-1 pr-4">
                         <h4 className="font-semibold">{experience.title}</h4>
                         <p className="text-gray-600">
                           {experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
@@ -698,6 +703,7 @@ const Home: NextPage = () => {
                                   className="transition-colors duration-200"
                                   style={{
                                     color: theme.links[color].default,
+                                    textDecoration: 'underline',
                                   }}
                                   onMouseEnter={(e) => {
                                     e.currentTarget.style.color = theme.links[color].hover;
@@ -714,7 +720,7 @@ const Home: NextPage = () => {
                           })}
                         </p>
                       </div>
-                      <span className="text-gray-500">{experience.year}</span>
+                      <span className="whitespace-nowrap text-gray-500 text-right">{experience.year}</span>
                     </div>
                   ))}
                 </div>
@@ -815,13 +821,13 @@ const Home: NextPage = () => {
 
             {/* Thumbnails - Vertical on desktop, Horizontal on mobile */}
             <div className="w-full md:w-16 flex-shrink-0 order-2 md:order-1">
-              <div className="h-16 md:h-[360px] overflow-x-auto md:overflow-y-auto flex flex-row md:flex-col gap-1.5 pb-1.5 md:pb-0 md:pr-1.5 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
+              <div className="h-16 md:h-[360px] overflow-x-auto md:overflow-y-auto flex flex-row md:flex-col gap-2 p-1 md:pb-0 md:pr-1.5 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
                 {[...photosData].reverse().map((photo, index) => (
                   <button
                     key={photosData.length - 1 - index}
                     onClick={() => setCurrentPhotoIndex(photosData.length - 1 - index)}
                     className={`w-16 md:w-full aspect-square relative rounded-md overflow-hidden transition-transform duration-200 hover:scale-105 flex-shrink-0 ${
-                      currentPhotoIndex === (photosData.length - 1 - index) ? 'ring-2 ring-blue-500' : ''
+                      currentPhotoIndex === (photosData.length - 1 - index) ? 'ring-2 ring-blue-500 p-[1px]' : ''
                     }`}
                   >
                     <Image
