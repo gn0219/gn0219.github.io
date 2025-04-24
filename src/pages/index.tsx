@@ -19,7 +19,7 @@ const Home: NextPage = () => {
   const [activeSection, setActiveSection] = useState('about');
   const [showEmailTooltip, setShowEmailTooltip] = useState(false);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(photosData.length - 1);
   const sections = useRef<{ [key: string]: IntersectionObserverEntry }>({});
   const headerHeight = parseInt(theme.spacing.headerHeight);
   const [touchStart, setTouchStart] = useState<number | null>(null);
