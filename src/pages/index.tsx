@@ -143,7 +143,8 @@ const Home: NextPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-[Pretendard]">
       <Head>
-        <title>{profileData.name} - Personal Homepage</title>
+        {/* <title>{profileData.name} - Personal Homepage</title> */}
+        <title>{`${profileData.name} - Personal Homepage`}</title>
         <meta name="description" content={`${profileData.name}'s personal homepage`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -181,7 +182,7 @@ const Home: NextPage = () => {
               </div>
               {/* CV button - always visible */}
               <a
-                href="/cv.pdf"
+                href={profileData.cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-sm md:text-base"
@@ -557,9 +558,12 @@ const Home: NextPage = () => {
                         <Image
                           src={project.image}
                           alt={project.title}
-                          layout="fill"
-                          objectFit="contain"
+                          fill
+                          style={{ objectFit: 'contain' }}
+                          // layout="fill"
+                          // objectFit="contain"
                           className="rounded-lg"
+                          sizes="(max-width: 768px) 100vw, 33vw"
                         />
                       </div>
                     </div>

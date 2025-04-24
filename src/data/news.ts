@@ -13,11 +13,11 @@ export const newsData: NewsItem[] = [
   {
     date: "2024-07",
     title: "SIGCHI Local Chapter",
-    description: "I visited [SIGCHI Korea Local Chapter](https://2024summer.sigchi.kr/, color=blue) in July 2024"
+    description: "I visited [SIGCHI Korea Local Chapter](https://2024summer.sigchi.kr/, color=blue) summer event 🛳️"
   },
   {
     date: "2024-02",
     title: "News will be updated in ICLab",
-    description: "I started my master's program at KAIST in February 2024 🎊"
+    description: "I started my master's program at KAIST, advised by Prof. Uichin Lee 🎊"
   }
 ]; 

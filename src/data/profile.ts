@@ -33,6 +33,7 @@ export interface Profile {
     url: string;
     advisor: string;
   };
+  cvUrl: string;
 }
 
 export const profileData: Profile = {
@@ -93,5 +94,6 @@ export const profileData: Profile = {
     fullName: "KAIST Interactive Computing Laboratory",
     url: "https://ic.kaist.ac.kr/",
     advisor: "Prof. Uichin Lee"
-  }
+  },
+  cvUrl: "/gyuna_cv_2025_4.pdf"
 }; 
