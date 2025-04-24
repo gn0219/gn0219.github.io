@@ -32,7 +32,7 @@ export const honorsData: Honor[] = [
   },
   {
     year: "2020",
-    title: "Advance to the finals, Smart Maritime Logistics Entrepreneurship Contest",
+    title: "Advance to Finals, Smart Maritime Logistics Entrepreneurship Contest",
     organization: "UNIST"
   },
 ]; 
