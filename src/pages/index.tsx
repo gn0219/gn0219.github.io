@@ -262,7 +262,7 @@ const Home: NextPage = () => {
                     )}
                     {/* Copy Success Message */}
                     {showCopySuccess && (
-                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 px-2 py-0.5 bg-green-600 text-white text-xs rounded whitespace-nowrap">
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-7 px-2 py-0.5 bg-green-600 text-white text-xs rounded whitespace-nowrap">
                         Email Copied!
                       </div>
                     )}
