@@ -24,4 +24,16 @@ export const photosData: Photo[] = [
     src: '/images/photos/photo5.jpg',
     comment: '2024 | KAIST Art Museum 📸'
   },
+  {
+    src: '/images/photos/photo6.jpg',
+    comment: '2025 | CHI Conference in Yokohama 🌸'
+  },
+  {
+    src: '/images/photos/photo7.jpg',
+    comment: '2025 | CHI Conference in Yokohama 🌸'
+  },
+  {
+    src: '/images/photos/photo8.jpg',
+    comment: '2025 | CHI Conference in Yokohama 🌸'
+  }  
 ]; 

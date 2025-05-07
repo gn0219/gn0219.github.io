@@ -8,7 +8,7 @@ export const newsData: NewsItem[] = [
   {
     date: "2025-04",
     title: "CHI conference 2025",
-    description: "I will be attending [CHI 2025](https://chi2025.acm.org/, color=pink) in Yokohama, Japan 🌸"
+    description: "I attended [CHI 2025](https://chi2025.acm.org/, color=pink) in Yokohama, Japan 🌸"
   },
   {
     date: "2024-07",
