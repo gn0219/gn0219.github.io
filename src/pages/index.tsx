@@ -213,7 +213,7 @@ const Home: NextPage = () => {
               </div>
               <div className="text-center md:text-left space-y-2">
                 <div className="space-y-2">
-                  <h1 className="text-xl font-bold font-lora text-gray-900">{profileData.name}</h1>
+                  <h1 className="text-xl font-bold font-lora text-gray-900">{profileData.name} {profileData.koreanName && `(${profileData.koreanName})`}</h1>
                   <p className="text-base text-gray-700 leading-snug">{profileData.title}</p>
                   <p className="text-sm text-gray-500 leading-snug">{profileData.location}</p>
                 </div>

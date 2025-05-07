@@ -1,5 +1,6 @@
 export interface Profile {
   name: string;
+  koreanName?: string;
   title: string;
   email: string;
   location: string;
@@ -38,6 +39,7 @@ export interface Profile {
 
 export const profileData: Profile = {
   name: "Gyuna Kim",
+  koreanName: "김규나",
   title: "Digital Health and HCI Researcher",
   email: "gyuna.kim@kaist.ac.kr",
   location: "Daejeon, Republic of Korea",
