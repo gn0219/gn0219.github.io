@@ -1,7 +1,8 @@
 # Gyuna's Personal Homepage
 
 This is my personal homepage built with Next.js and TypeScript.
-[gyuna.me](gyuna.me)
+
+[gyuna.me](https://gyuna.me)
 
 ## Project Structure
 
