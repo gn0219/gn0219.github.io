@@ -146,7 +146,7 @@ const Home: NextPage = () => {
         {/* <title>{profileData.name} - Personal Homepage</title> */}
         <title>{`${profileData.name} - Personal Homepage`}</title>
         <meta name="description" content={`${profileData.name}'s personal homepage`} />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </Head>
 
       {/* Header with Lora font for name */}
@@ -194,7 +194,7 @@ const Home: NextPage = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <main className="container mx-auto px-4 py-8 max-w-6xl">
         <div style={{ paddingTop: theme.spacing.headerHeight }}></div>
 
         {/* Profile Section */}
@@ -476,66 +476,82 @@ const Home: NextPage = () => {
                           ) : (
                             author
                           )}
-                          {i < publication.authors.length - 1 ? ', ' : ''}
+                          {i < publication.authors.length - 2 ? ', ' : ''}
+                          {i === publication.authors.length - 2 ? ' and ' : ''}
                         </span>
                       ))}
                     </p>
-                    <div className="flex flex-wrap items-center gap-1">
-                      <p className="text-sm text-gray-600 leading-tight">
+                    <div className="flex flex-wrap items-center gap-3">
+                      <p className="text-sm text-gray-600 leading-tight mb-0">
                         {publication.venue} {publication.year}
                       </p>
-                      {publication.doi && (
-                        <a
-                          href={`https://doi.org/${publication.doi}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition-colors duration-200"
-                        >
-                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          Paper
-                        </a>
-                      )}
-                      {publication.slides && (
-                        <a
-                          href={publication.slides}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-md hover:bg-yellow-200 transition-colors duration-200"
-                        >
-                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-                          </svg>
-                          Slides
-                        </a>
-                      )}
-                      {publication.poster && (
-                        <a
-                          href={publication.poster}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-violet-700 bg-violet-100 rounded-md hover:bg-violet-200 transition-colors duration-200"
-                        >
-                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
-                          Poster
-                        </a>
-                      )}
-                      {publication.video && (
-                        <a
-                          href={publication.video}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-pink-700 bg-pink-100 rounded-md hover:bg-pink-200 transition-colors duration-200"
-                        >
-                          <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                          Video
-                        </a>
-                      )}
+                      <div className="flex flex-wrap gap-2 w-full mt-0 -mt-1">
+                        {publication.doi && (
+                          <a
+                            href={`https://doi.org/${publication.doi}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 transition-colors duration-200"
+                          >
+                            <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Paper
+                          </a>
+                        )}
+                        {publication.slides && (
+                          <a
+                            href={publication.slides}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-yellow-700 bg-yellow-100 rounded-md hover:bg-yellow-200 transition-colors duration-200"
+                          >
+                            <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                            </svg>
+                            Slides
+                          </a>
+                        )}
+                        {publication.poster && (
+                          <a
+                            href={publication.poster}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-violet-700 bg-violet-100 rounded-md hover:bg-violet-200 transition-colors duration-200"
+                          >
+                            <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            Poster
+                          </a>
+                        )}
+                        {publication.video && (
+                          <a
+                            href={publication.video}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-pink-700 bg-pink-100 rounded-md hover:bg-pink-200 transition-colors duration-200"
+                          >
+                            <svg className="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            Video
+                          </a>
+                        )}
+                        {publication.github && (
+                          <a
+                            href={publication.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-200"
+                          >
+                            <svg className="w-3 h-3 mr-0.5" fill="currentColor" viewBox="0 0 24 24">
+                              <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+                            </svg>
+                            GitHub
+                          </a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -602,6 +618,33 @@ const Home: NextPage = () => {
                         }
                         return null;
                       })}
+                      {project.links && (project.links.github || project.links.demo) && (
+                        <span className="block mt-2 text-sm text-gray-500">
+                          <span className="inline-flex items-center gap-2">
+                            {project.links.github && (
+                              <a
+                                href={project.links.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors align-middle"
+                              >
+                                💻 GitHub repository
+                              </a>
+                            )}
+                            {project.links.github && project.links.demo && <span> | </span>}
+                            {project.links.demo && (
+                              <a
+                                href={project.links.demo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors align-middle"
+                              >
+                                📄 Paper
+                              </a>
+                            )}
+                          </span>
+                        </span>
+                      )}
                     </p>
                     <div className="space-y-4">
                       <div className="flex items-center">
@@ -622,35 +665,6 @@ const Home: NextPage = () => {
                           ))}
                         </div>
                       </div>
-                      {project.links && (
-                        <div className="flex items-start pt-2">
-                          <span className="w-20 text-gray-500">Links:</span>
-                          <div className="flex gap-4">
-                            {project.links.github && (
-                              <a
-                                href={project.links.github}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-gray-600 hover:text-gray-900 transition-colors"
-                              >
-                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                  <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
-                                </svg>
-                              </a>
-                            )}
-                            {project.links.demo && (
-                              <a
-                                href={project.links.demo}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-600 hover:text-blue-800 transition-colors"
-                              >
-                                Demo →
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>

@@ -43,7 +43,7 @@ export const profileData: Profile = {
   title: "Digital Health and HCI Researcher",
   email: "gyuna.kim@kaist.ac.kr",
   location: "Daejeon, Republic of Korea",
-  bio: "Researching signals (wearable, speech, PPG) for digital health and mental well-being | M.S. student @ KAIST ICLab",
+  bio: "Researching signals (physiological, wearable, speech) for digital health and mental well-being | M.S. student @ KAIST ICLab",
   image: "/images/photos/profile.jpg",
   socialLinks: {
     github: "https://github.com/gn0219",
@@ -77,7 +77,7 @@ export const profileData: Profile = {
     "Visual Analytics"
   ],
   about: `I am a master's student at [KAIST ICLab](https://ic.kaist.ac.kr/, color=blue), advised by Prof. Uichin Lee.
-  My research spans various areas of digital health — from modeling human states using multimodal data, to enhancing the quality of physiological signals, and designing evaluative tools.
+  My research spans various areas of digital health — from modeling human states using multimodal data, to designing evaluative tools.
   While the specific topics differ, they all share a common goal: leveraging everyday data and technology to support better health outcomes.
   Ultimately, I aim to help build systems that make digital health support more effective, interpretable, and adaptable across different contexts.
 `,
