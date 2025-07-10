@@ -39,7 +39,7 @@ export const projectsData: ProjectsData = {
     {
       title: "Developing a mood detection model using Multi-Modal Data",
       description: "Developing a model to detect depression and anxiety using speech and sensor data from wearable, mobile, and IoT devices. This project is being conducted in collaboration with [LG Electronics](http://m.lge.co.kr/LGEMMainHpPCmd.laf, color=pink).",
-      startDate: "2024-08",
+      startDate: "2024-03",
       endDate: "2025-05",
       role: "Deep Learning Model Development",
       technologies: ["PyTorch", "Speech Emotion Recognition"],
@@ -52,7 +52,7 @@ export const projectsData: ProjectsData = {
     {
       title: "Predicting Workload Stress in Call Center Employees",
       description: "Developed a model to predict call center workload by combining audio and text data. Funded by [NRF Graduate Research Fellowship](https://www.nrf.re.kr/biz/info/info/view?menu_no=378&biz_no=588, color=green) for Master's Students (2024.07 – 2025.06)",
-      startDate: "2024-01 - 2024-02, 2024-07",
+      startDate: "2024-07",
       endDate: "2025-05",
       role: "Multimodal Model Development",
       technologies: ["PyTorch", "Hugging Face", "Audio Processing"],
