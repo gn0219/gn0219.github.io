@@ -72,12 +72,6 @@ export const profileData: Profile = {
     }
   ],
   skills: [
-    "Human-Computer Interaction",
-    "Multimodal Data Analysis",
-    "Machine Learning/Deep Learning",
-    "Digital Phenotyping",
-    "Signal Processing",
-    "Visual Analytics"
   ],
   about: `I am a master's student at [KAIST ICLab](https://ic.kaist.ac.kr/, color=blue), advised by Prof. Uichin Lee.
   My research spans various areas of digital health — from modeling human states using multimodal data, to designing evaluative tools.
