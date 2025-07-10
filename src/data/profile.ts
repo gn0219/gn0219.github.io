@@ -23,7 +23,10 @@ export interface Profile {
   }[];
   skills: string[];
   about: string;
-  interests: string[];
+  interests: {
+    "AI/ML": string[];
+    "HCI": string[];
+  };
   relatedWebsite: {
     title: string;
     url: string;
@@ -81,12 +84,17 @@ export const profileData: Profile = {
   While the specific topics differ, they all share a common goal: leveraging everyday data and technology to support better health outcomes.
   Ultimately, I aim to help build systems that make digital health support more effective, interpretable, and adaptable across different contexts.
 `,
-  interests: [
-    "User Modeling",
-    "Multimodal Interaction",
-    "Sensor Fusion",
-    "Human-Computer Interaction"
-  ],
+  interests: {
+    "AI/ML": [
+      "AI/ML in Healthcare",
+      "Digital Phenotyping",
+      "Multimodal Data Analysis",
+    ],
+    "HCI": [
+      "Visual Analytics",
+      "Interactive Systems"
+    ]
+  },
   relatedWebsite: {
     title: "ICLab in KAIST",
     url: "https://kaist-iclab.github.io"

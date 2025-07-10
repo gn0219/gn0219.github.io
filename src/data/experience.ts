@@ -9,21 +9,6 @@ export interface Experience {
 
 export const experienceData: Experience[] = [
   {
-    role: "Teaching & Academic Support",
-    experiences: [
-      {
-        year: "2025 Spring",
-        title: "Teaching Assistant, CS565_DS522 IoT Data Science",
-        institution: "[KAIST](https://www.kaist.ac.kr/en/, color=university)"
-      },
-      {
-        year: "Jul 2022 – Oct 2022",
-        title: "Student Supporter, Starmooc Lecture Video Production",
-        institution: "[UNIST](https://www.unist.ac.kr/, color=university)"
-      }
-    ]
-  },
-  {
     role: "Work & Internship",
     experiences: [
       {
@@ -42,20 +27,40 @@ export const experienceData: Experience[] = [
         institution: "Travel Startup in Ulsan, Korea"
       }
     ]
+  },
+  {
+    role: "Teaching & Academic Support",
+    experiences: [
+      {
+        year: "2025 Spring",
+        title: "Teaching Assistant, CS565_DS522 IoT Data Science",
+        institution: "KAIST"
+      },
+      {
+        year: "Jul 2022 – Oct 2022",
+        title: "Student Supporter, Starmooc Lecture Video Production",
+        institution: "UNIST"
+      }
+    ]
+  },
+  {
+    role: "Mentorship & Outreach",
+    experiences: [
+      {
+        year: "Winter 2024, Summer 2025",
+        title: "Mentor, Research Internship",
+        institution: "KAIST ICLab"
+      },
+      {
+        year: "Jan 2022",
+        title: "Mentor, Explore@UNIST – High School Science & Tech Leadership Camp",
+        institution: "UNIST"
+      },
+      {
+        year: "Apr 2021 – Oct 2021",
+        title: "Mentor, Club-to-Club Entrepreneurship Mentorship for High School Students",
+        institution: "UNIST"
+      }
+    ]
   }
-  // {
-  //   role: "Mentorship & Outreach",
-  //   experiences: [
-  //     {
-  //       year: "May 2023",
-  //       title: "Mentor, Explore@UNIST",
-  //       institution: "UNIST"
-  //     },
-  //     {
-  //       year: "Apr 2021 – Oct 2021",
-  //       title: "Mentor, Club to Club Entrepreneurship Education",
-  //       institution: "UNIST"
-  //     }
-  //   ]
-  // }
 ]; 
