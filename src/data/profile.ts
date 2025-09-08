@@ -80,9 +80,10 @@ export const profileData: Profile = {
 `,
   interests: {
     "AI/ML": [
-      "AI/ML in Healthcare",
+      "AI Healthcare",
       "Digital Phenotyping",
       "Multimodal Data Analysis",
+      "LLM Context Engineering"
     ],
     "HCI": [
       "Visual Analytics",

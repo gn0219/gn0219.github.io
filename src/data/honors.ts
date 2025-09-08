@@ -6,6 +6,11 @@ export interface Honor {
 
 export const honorsData: Honor[] = [
   {
+    year: "2025",
+    title: "Creative Research Award, K-Data Science Conference",
+    organization: "Korean Data Science Consortium"
+  },
+  {
     year: "2024",
     title: "Graduate Research Fellowship for Master's Students",
     organization: "National Research Foundation of Korea (NRF)"

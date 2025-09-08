@@ -19,6 +19,33 @@ export interface ProjectsData {
 
 export const projectsData: ProjectsData = {
   current: [
+    {
+      title: "Systematic Evaluation of LLMs for Mental Health Prediction",
+      description: "Evaluating LLM-based workflows for mental health prediction using passive sensor data, covering model selection, context retrieval, and reasoning strategies.",
+      startDate: "2025-05",
+      endDate: "Present",
+      role: "Research Lead",
+      technologies: ["LLM", "Sensor Data", "AI Healthcare"],
+      // image: "/images/projects/mental_llm_eval.png"
+    },
+    {
+      title: "Multi-Agent System for Mental Health Diagnosis Support and Coaching",
+      description: "Designing a multi-agent system that integrates patient and clinician agents to provide personalized mental health screening and lifestyle coaching.",
+      startDate: "2025-05",
+      endDate: "Present",
+      role: "Co-Researcher",
+      technologies: ["LLM", "Multi-Agent Systems", "AI Healthcare"],
+      // image: "/images/projects/multi_agent_coaching.png"
+    },
+    {
+      title: "Interactive Reporting System for Digital Health Data",
+      description: "Designing an interactive reporting system that helps evaluators interpret and explore digital health data with clarity and flexibility.",
+      startDate: "2024-08",
+      endDate: "2025-05",
+      role: "Design and Research Lead",
+      technologies: ["Figma", "Visualization"],
+      image: "/images/projects/report.png",
+    },
     // {
     //   title: "Enhancing Signal Quality Indices for Real-World PPG Signals",
     //   description: "Improving the reliability of physiological data through real-world PPG signal quality assessment",
@@ -28,26 +55,26 @@ export const projectsData: ProjectsData = {
     //   image: "/images/projects/ppg.png",
     // },
     {
-      title: "Interactive Reporting System for Digital Health Data",
-      description: "Designing an interactive reporting system that helps evaluators interpret and explore digital health data with clarity and flexibility.",
-      startDate: "2024-08",
-      endDate: "2025-08",
-      role: "Design and Research Lead",
-      technologies: ["Figma", "User Study", "Visualization"],
-      image: "/images/projects/report.png",
-    },
-    {
       title: "Developing a mood detection model using Multi-Modal Data",
       description: "Developing a model to detect depression and anxiety using speech and sensor data from wearable, mobile, and IoT devices. This project is being conducted in collaboration with LG Electronics.",
       startDate: "2024-03",
-      endDate: "2025-05",
-      role: "Deep Learning Model Development",
-      technologies: ["PyTorch", "Speech Emotion Recognition"],
-      image: "/images/projects/lg_pipeline.png",
+      endDate: "2025-06",
+      role: "Methodology and Model Development",
+      technologies: ["PyTorch", "Sensor Fusion","Speech Emotion Recognition"],
+      image: "/images/projects/lg_overview.png",
       links: {
         github: "https://github.com/Kaist-ICLab/multimodal-mh-detection",
         // demo: "https://www.researchgate.net/publication/3710000000000000000"
       }
+    },
+    {
+      title: "Interactive Reporting System for Digital Health Data",
+      description: "Designing an interactive reporting system that helps evaluators interpret and explore digital health data with clarity and flexibility.",
+      startDate: "2024-08",
+      endDate: "2025-05",
+      role: "Design and Research Lead",
+      technologies: ["Figma", "Visualization"],
+      image: "/images/projects/report.png",
     },
     {
       title: "Predicting Workload Stress in Call Center Employees",

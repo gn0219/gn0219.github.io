@@ -168,7 +168,7 @@ const Home: NextPage = () => {
             <nav className="flex items-center">
               {/* Navigation buttons - only visible on md and larger screens */}
               <div className="hidden md:flex items-center space-x-8 mr-4">
-                {['about me', 'research'].map((section) => ( /*, 'etc', 'photos' */
+                {['about me', 'projects'].map((section) => ( /*, 'etc', 'photos' */
                   <button
                     key={section}
                     onClick={() => scrollToSection(section.replace(' ', ''))}
@@ -181,14 +181,14 @@ const Home: NextPage = () => {
                 ))}
               </div>
               {/* CV button - always visible */}
-              <a
+              {/* <a
                 href={profileData.cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 font-medium text-sm md:text-base"
               >
                 CV
-              </a>
+              </a> */}
             </nav>
           </div>
         </div>
@@ -879,7 +879,7 @@ const Home: NextPage = () => {
 
         {/* Footer */}
         <footer className="mt-16 pb-8 text-center text-gray-500">
-          <p>Copyright © 2025 Gyuna Kim. All rights reserved.</p>
+          <p>Copyright © 2025 Gyuna Kim. All rights reserved. | Last updated on September 8, 2025.</p>
         </footer>
       </main>
     </div>

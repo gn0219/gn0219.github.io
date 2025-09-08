@@ -47,7 +47,7 @@ export const experienceData: Experience[] = [
     role: "Mentorship & Outreach",
     experiences: [
       {
-        year: "Winter 2024, Summer 2025",
+        year: "Fall 2024, Summer 2025",
         title: "Mentor, Research Internship",
         institution: "KAIST ICLab"
       },
