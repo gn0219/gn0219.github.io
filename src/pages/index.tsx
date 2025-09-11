@@ -638,13 +638,13 @@ const Home: NextPage = () => {
                 <div className="flex flex-col lg:flex-row">
                   {project.image ? (
                     // Left column with image
-                    <div className="lg:w-2/5 xl:w-3/7 relative bg-gray-50 flex items-center justify-center p-4 sm:p-6" style={{ aspectRatio: projectImageAspect[index] || '3 / 2' }}>
+                    <div className="lg:w-2/5 xl:w-3/7 relative bg-gray-50 flex items-center justify-center p-3 sm:p-6" style={{ aspectRatio: projectImageAspect[index] || '3 / 2' }}>
                       <div className="relative w-full h-full">
                         <Image
                           src={project.image}
                           alt={project.title}
                           fill
-                          style={{ objectFit: 'contain' }}
+                          style={{ objectFit: 'contain', objectPosition: 'center' }}
                           className="rounded-lg"
                           sizes="(max-width: 1024px) 100vw, 33vw"
                           onLoadingComplete={(img) => {
