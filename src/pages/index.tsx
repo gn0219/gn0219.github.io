@@ -25,9 +25,16 @@ const Home: NextPage = () => {
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isAutoPlayPaused, setIsAutoPlayPaused] = useState(false);
+  const [projectFilter, setProjectFilter] = useState<'all' | 'ongoing' | 'completed'>('all');
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
+
+  // Filter projects based on selected filter
+  const filteredProjects = projectsData.current.filter(project => {
+    if (projectFilter === 'all') return true;
+    return project.status === projectFilter;
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -150,8 +157,8 @@ const Home: NextPage = () => {
       </Head>
 
       {/* Header with Lora font for name */}
-      <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 relative rounded-full overflow-hidden">
@@ -194,12 +201,12 @@ const Home: NextPage = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="container mx-auto px-6 py-12 max-w-6xl">
         <div style={{ paddingTop: theme.spacing.headerHeight }}></div>
 
         {/* Profile Section */}
-        <section id="aboutme" className="mb-12">
-          <div className="flex flex-col md:flex-row items-start gap-16">
+        <section id="aboutme" className="mb-16">
+          <div className="flex flex-col lg:flex-row items-start gap-12">
             {/* Left Column: Profile Image + Simple Info */}
             <div className="flex flex-col items-center md:items-start space-y-5 flex-shrink-0 w-full md:w-auto">
               <div className="w-64 h-64 relative rounded-full overflow-hidden">
@@ -324,7 +331,7 @@ const Home: NextPage = () => {
           </div>
 
           {/* Education and Skills */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
               <h3 className="text-xl font-semibold mb-4 font-lora">Education</h3>
               <div className="space-y-3">
@@ -378,36 +385,27 @@ const Home: NextPage = () => {
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-4 font-lora">Interests</h3>
-              {/* AI/ML */}
-              <div className="mb-3">
-                <span className="text-base font-semibold text-blue-950 mr-2">AI/ML</span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {profileData.interests["AI/ML"].map((interest, idx) => (
-                    <span key={idx} className="px-2 py-0.5 rounded-full text-sm bg-blue-100 text-blue-800 border border-blue-200">
-                      {interest}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              {/* HCI */}
-              <div>
-                <span className="text-base font-semibold text-purple-950 mr-2">HCI</span>
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {profileData.interests["HCI"].map((interest, idx) => (
-                    <span key={idx} className="px-2 py-0.5 rounded-full text-sm bg-purple-100 text-purple-800 border border-purple-200">
-                      {interest}
-                    </span>
-                  ))}
-                </div>
+              <div className="flex flex-wrap gap-2">
+                {[...(profileData.interests["AI/ML"] || []), ...(profileData.interests["HCI"] || [])].map((interest, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+                  >
+                    {interest}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
         {/* News Section */}
-        <section className="mb-12">
-          <h2 className="text-2xl font-bold mb-4">News ✨</h2>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
+        <section className="mb-16">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 font-lora">News ✨</h2>
+            <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+          </div>
+          <div className="bg-white p-6 rounded-lg border border-gray-200">
             <div className="space-y-4">
               {newsData.map((news, index) => (
                 <div key={index} className="flex items-start">
@@ -475,9 +473,12 @@ const Home: NextPage = () => {
         </section> */}
 
         {/* Honors and Awards Section */}
-        <section id="etc" className="mb-12 scroll-mt-24">
-          <h2 className="text-2xl font-bold mb-4">Honors and Awards 🏆</h2>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
+        <section id="etc" className="mb-16 scroll-mt-24">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 font-lora">Honors and Awards 🏆</h2>
+            <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+          </div>
+          <div className="bg-white p-6 rounded-lg border border-gray-200">
             <div className="space-y-4">
               {honorsData.map((honor, index) => (
                 <div key={index} className="flex items-start gap-4">
@@ -596,23 +597,53 @@ const Home: NextPage = () => {
         )}
 
         {/* Projects Section */}
-        <section id="projects" className="mb-12">
-          <h2 className="text-2xl font-bold mb-6 font-lora">Projects</h2>
+        <section id="projects" className="mb-16">
+          <div className="mb-6 flex items-center gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 font-lora">Projects</h2>
+              <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+            </div>
+            {/* Compact Filter Buttons inline next to title */}
+            <div className="flex gap-1.5">
+              {(['all', 'ongoing', 'completed'] as const).map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setProjectFilter(filter)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded border transition-colors ${
+                    projectFilter === filter
+                      ? 'bg-gray-800 text-white border-gray-800'
+                      : 'bg-white text-gray-800 border-gray-300 hover:bg-gray-50'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
           <div className="grid grid-cols-1 gap-8">
-            {projectsData.current.map((project, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-sm overflow-hidden"> 
+            {filteredProjects.map((project, index) => (
+              <div key={index} className="bg-white rounded-lg border border-gray-200 overflow-hidden relative"> 
+                {/* Status Badge - Top Left Corner (Completed only) */}
+                {project.status === 'completed' && (
+                  <div className="absolute top-3 left-3 z-0">
+                    <div className="flex items-center px-2.5 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded border border-gray-200">
+                      <div className="w-1.5 h-1.5 bg-gray-600 rounded-full mr-1.5"></div>
+                      Completed
+                    </div>
+                  </div>
+                )}
+                
                 <div className="flex flex-col md:flex-row">
                   {project.image ? (
                     // Left column with image
-                    <div className="md:w-2/5 lg:w-3/7 h-72 md:h-auto relative bg-white flex items-center justify-center p-4">
+                    <div className="md:w-2/5 lg:w-3/7 h-72 md:h-auto relative bg-gray-50 flex items-center justify-center p-4">
                       <div className="relative w-full h-full">
                         <Image
                           src={project.image}
                           alt={project.title}
                           fill
                           style={{ objectFit: 'contain' }}
-                          // layout="fill"
-                          // objectFit="contain"
                           className="rounded-lg"
                           sizes="(max-width: 768px) 100vw, 33vw"
                         />
@@ -620,8 +651,8 @@ const Home: NextPage = () => {
                     </div>
                   ) : null}
                   {/* Right column with content - adjusts width based on image presence */}
-                  <div className={`flex-1 p-6 ${!project.image ? 'md:p-8' : ''}`}>
-                    <h3 className="text-xl font-semibold mb-4 font-lora">{project.title}</h3>
+                  <div className={`flex-1 p-6 ${!project.image ? 'md:p-8' : ''} ${!project.image && project.status === 'completed' ? 'pt-10' : ''}`}>
+                    <h3 className="text-xl font-semibold font-lora mb-3 text-gray-900">{project.title}</h3>
                     <p className="text-gray-600 mb-4">
                       {project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
                         if (i % 4 === 0) return part;
@@ -641,10 +672,10 @@ const Home: NextPage = () => {
                                 textDecoration: 'underline',
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.color = theme.links[linkColor].hover;
+                                (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].hover;
                               }}
                               onMouseLeave={(e) => {
-                                e.currentTarget.style.color = theme.links[linkColor].default;
+                                (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].default;
                               }}
                             >
                               {part}
@@ -681,20 +712,21 @@ const Home: NextPage = () => {
                         </span>
                       )}
                     </p>
-                    <div className="space-y-4">
+                    {/* Subtler info row */}
+                    <div className="space-y-3">
                       <div className="flex items-center">
-                        <span className="w-20 text-gray-500">Period:</span>
-                        <span>{project.startDate} - {project.endDate || 'Present'}</span>
+                        <span className="w-20 text-gray-600 text-sm">Period:</span>
+                        <span className="text-sm text-gray-800">{project.startDate} - {project.endDate || 'Present'}</span>
                       </div>
                       <div className="flex items-center">
-                        <span className="w-20 text-gray-500">Role:</span>
-                        <span>{project.role}</span>
+                        <span className="w-20 text-gray-600 text-sm">Role:</span>
+                        <span className="text-sm text-gray-800">{project.role}</span>
                       </div>
                       <div className="flex items-start">
-                        <span className="w-20 text-gray-500 mt-1">Skills:</span>
+                        <span className="w-20 text-gray-600 mt-0.5 text-sm">Skills:</span>
                         <div className="flex flex-wrap gap-2">
                           {project.technologies.map((tech, idx) => (
-                            <span key={idx} className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                            <span key={idx} className="bg-gray-50 text-gray-800 px-2.5 py-0.5 rounded border border-gray-300 text-sm">
                               {tech}
                             </span>
                           ))}
@@ -709,18 +741,21 @@ const Home: NextPage = () => {
         </section>
 
         {/* Experience Section */}
-        <section id="experience" className="mb-12 scroll-mt-24">
-          <h2 className="text-2xl font-bold mb-4">Experience</h2>
-          <div className="space-y-8">
+        <section id="experience" className="mb-16 scroll-mt-24">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 font-lora">Experience</h2>
+            <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+          </div>
+          <div className="space-y-6">
             {experienceData.map((experience, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-xl font-semibold mb-4">{experience.role}</h3>
-                <div className="space-y-4">
+              <div key={index} className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-semibold mb-4 text-gray-900">{experience.role}</h3>
+                <div className="divide-y divide-gray-100">
                   {experience.experiences.map((experience, idx) => (
-                    <div key={idx} className="flex justify-between items-start">
+                    <div key={idx} className="flex justify-between items-start py-4 first:pt-0 last:pb-0">
                       <div className="flex-1 pr-4">
-                        <h4 className="font-semibold">{experience.title}</h4>
-                        <p className="text-gray-600">
+                        <h4 className="font-semibold text-gray-900 mb-1 text-base">{experience.title}</h4>
+                        <p className="text-gray-800 text-base leading-relaxed">
                           {experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
                             if (i % 4 === 0) return part;
                             if (i % 4 === 1) {
@@ -739,10 +774,10 @@ const Home: NextPage = () => {
                                     textDecoration: 'underline',
                                   }}
                                   onMouseEnter={(e) => {
-                                    e.currentTarget.style.color = theme.links[color].hover;
+                                    (e.currentTarget as HTMLAnchorElement).style.color = theme.links[color].hover;
                                   }}
                                   onMouseLeave={(e) => {
-                                    e.currentTarget.style.color = theme.links[color].default;
+                                    (e.currentTarget as HTMLAnchorElement).style.color = theme.links[color].default;
                                   }}
                                 >
                                   {part}
@@ -753,7 +788,7 @@ const Home: NextPage = () => {
                           })}
                         </p>
                       </div>
-                      <span className="whitespace-nowrap text-gray-500 text-right">{experience.year}</span>
+                      <span className="whitespace-nowrap text-gray-600 text-right text-sm">{experience.year}</span>
                     </div>
                   ))}
                 </div>
@@ -764,20 +799,23 @@ const Home: NextPage = () => {
 
         {/* Services Section - Hidden if empty */}
         {servicesData.length > 0 && (
-          <section id="services" className="mb-12">
-            <h2 className="text-2xl font-bold mb-4">Services</h2>
-            <div className="space-y-8">
+          <section id="services" className="mb-16">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 font-lora">Services</h2>
+              <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+            </div>
+            <div className="space-y-6">
               {servicesData.map((service, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+                <div key={index} className="bg-white p-6 rounded-lg border border-gray-200">
                   <h3 className="text-xl font-semibold mb-4">{service.category}</h3>
                   <div className="space-y-4">
                     {service.items.map((item, idx) => (
                       <div key={idx} className="flex justify-between items-start">
                         <div>
-                          <h4 className="font-semibold">{item.title}</h4>
-                          {item.role && <p className="text-gray-600">{item.role}</p>}
+                          <h4 className="font-semibold text-gray-900 text-base">{item.title}</h4>
+                          {item.role && <p className="text-gray-700 text-sm">{item.role}</p>}
                         </div>
-                        <span className="text-gray-500">{item.year}</span>
+                        <span className="text-gray-600 text-sm">{item.year}</span>
                       </div>
                     ))}
                   </div>
@@ -788,8 +826,11 @@ const Home: NextPage = () => {
         )}
 
         {/* Photos Section */}
-        <section id="photos" className="mb-12 scroll-mt-24">
-          <h2 className="text-2xl font-bold mb-4 font-lora">Photos 📸</h2>
+        <section id="photos" className="mb-16 scroll-mt-24">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 font-lora">Photos 📸</h2>
+            <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+          </div>
           <div className="flex flex-col md:flex-row gap-3">
             {/* Main Photo */}
             <div 
@@ -879,7 +920,7 @@ const Home: NextPage = () => {
 
         {/* Footer */}
         <footer className="mt-16 pb-8 text-center text-gray-500">
-          <p>Copyright © 2025 Gyuna Kim. All rights reserved. | Last updated on September 8, 2025.</p>
+          <p>Copyright © 2025 Gyuna Kim. All rights reserved. | Last updated on September 11, 2025.</p>
         </footer>
       </main>
     </div>

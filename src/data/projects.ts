@@ -6,6 +6,7 @@ export interface Project {
   endDate?: string;
   role: string;
   technologies: string[];
+  status: 'ongoing' | 'completed';
   links?: {
     github?: string;
     demo?: string;
@@ -25,7 +26,8 @@ export const projectsData: ProjectsData = {
       startDate: "2025-05",
       endDate: "Present",
       role: "Research Lead",
-      technologies: ["LLM", "Sensor Data", "AI Healthcare"],
+      technologies: ["Context Engineering", "Sensor Data"],
+      status: "ongoing",
       // image: "/images/projects/mental_llm_eval.png"
     },
     {
@@ -35,16 +37,8 @@ export const projectsData: ProjectsData = {
       endDate: "Present",
       role: "Co-Researcher",
       technologies: ["LLM", "Multi-Agent Systems", "AI Healthcare"],
+      status: "ongoing",
       // image: "/images/projects/multi_agent_coaching.png"
-    },
-    {
-      title: "Interactive Reporting System for Digital Health Data",
-      description: "Designing an interactive reporting system that helps evaluators interpret and explore digital health data with clarity and flexibility.",
-      startDate: "2024-08",
-      endDate: "2025-05",
-      role: "Design and Research Lead",
-      technologies: ["Figma", "Visualization"],
-      image: "/images/projects/report.png",
     },
     // {
     //   title: "Enhancing Signal Quality Indices for Real-World PPG Signals",
@@ -61,10 +55,24 @@ export const projectsData: ProjectsData = {
       endDate: "2025-06",
       role: "Methodology and Model Development",
       technologies: ["PyTorch", "Sensor Fusion","Speech Emotion Recognition"],
+      status: "completed",
       image: "/images/projects/lg_overview.png",
       links: {
         github: "https://github.com/Kaist-ICLab/multimodal-mh-detection",
         // demo: "https://www.researchgate.net/publication/3710000000000000000"
+      }
+    },
+    {
+      title: "Predicting Workload Stress in Call Center Employees",
+      description: "Developed a model to predict call center workload by combining audio and text data. Funded by NRF Graduate Research Fellowship for Master's Students (2024.07 – 2025.06)",
+      startDate: "2024-07",
+      endDate: "2025-05",
+      role: "Multimodal Model Development",
+      technologies: ["PyTorch", "Hugging Face", "Audio Processing"],
+      status: "completed",
+      image: "/images/projects/regulation.png",
+      links: {
+        github: "https://github.com/Kaist-ICLab/EmoWorker"
       }
     },
     {
@@ -74,20 +82,9 @@ export const projectsData: ProjectsData = {
       endDate: "2025-05",
       role: "Design and Research Lead",
       technologies: ["Figma", "Visualization"],
+      status: "completed",
       image: "/images/projects/report.png",
     },
-    {
-      title: "Predicting Workload Stress in Call Center Employees",
-      description: "Developed a model to predict call center workload by combining audio and text data. Funded by NRF Graduate Research Fellowship for Master's Students (2024.07 – 2025.06)",
-      startDate: "2024-07",
-      endDate: "2025-05",
-      role: "Multimodal Model Development",
-      technologies: ["PyTorch", "Hugging Face", "Audio Processing"],
-      image: "/images/projects/regulation.png",
-      links: {
-        github: "https://github.com/Kaist-ICLab/EmoWorker"
-      }
-    }
     
   ],
   past: [
