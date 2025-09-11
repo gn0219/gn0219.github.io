@@ -26,6 +26,7 @@ const Home: NextPage = () => {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isAutoPlayPaused, setIsAutoPlayPaused] = useState(false);
   const [projectFilter, setProjectFilter] = useState<'all' | 'ongoing' | 'completed'>('all');
+  const [projectImageAspect, setProjectImageAspect] = useState<string[]>([]);
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -158,7 +159,7 @@ const Home: NextPage = () => {
 
       {/* Header with Lora font for name */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-10 h-10 relative rounded-full overflow-hidden">
@@ -201,14 +202,14 @@ const Home: NextPage = () => {
         </div>
       </header>
 
-      <main className="container mx-auto px-6 py-12 max-w-6xl">
+      <main className="container mx-auto px-3 sm:px-6 py-10 sm:py-12 max-w-6xl">
         <div style={{ paddingTop: theme.spacing.headerHeight }}></div>
 
         {/* Profile Section */}
         <section id="aboutme" className="mb-16">
-          <div className="flex flex-col lg:flex-row items-start gap-12">
+          <div className="flex flex-col lg:flex-row items-stretch gap-12">
             {/* Left Column: Profile Image + Simple Info */}
-            <div className="flex flex-col items-center md:items-start space-y-5 flex-shrink-0 w-full md:w-auto">
+            <div className="flex flex-col items-center lg:items-start self-center lg:self-auto space-y-5 flex-shrink-0 w-full lg:w-auto">
               <div className="w-64 h-64 relative rounded-full overflow-hidden">
                 <Image
                   src={profileData.image}
@@ -218,13 +219,13 @@ const Home: NextPage = () => {
                   className="rounded-full"
                 />
               </div>
-              <div className="text-center md:text-left space-y-2">
+              <div className="text-center lg:text-left space-y-2">
                 <div className="space-y-2">
                   <h1 className="text-xl font-bold font-lora text-gray-900">{profileData.name} {profileData.koreanName && `(${profileData.koreanName})`}</h1>
                   <p className="text-base text-gray-700 leading-snug">{profileData.title}</p>
                   <p className="text-sm text-gray-500 leading-snug">{profileData.location}</p>
                 </div>
-                <div className="flex gap-4 justify-center md:justify-start pt-2.5">
+                <div className="flex gap-4 justify-center lg:justify-start pt-2.5">
                   
                   {/* <a 
                     href={profileData.socialLinks.scholar}
@@ -291,9 +292,9 @@ const Home: NextPage = () => {
             </div>
 
             {/* Right Column: Description */}
-            <div className="flex-grow">
-              <h2 className="text-5xl font-bold mb-6 font-lora">Hi everyone! 👋</h2>
-              <div className="prose max-w-none text-gray-700">
+            <div className="flex-grow w-full">
+              <h2 className="text-5xl font-bold mb-6 font-lora text-left">Hi everyone! 👋</h2>
+              <div className="prose max-w-none text-gray-700 text-left">
                 <p>
                   {profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
                     if (i % 4 === 0) return part;
@@ -313,10 +314,10 @@ const Home: NextPage = () => {
                             textDecoration: 'underline',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.color = theme.links[linkColor].hover;
+                            (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].hover;
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.color = theme.links[linkColor].default;
+                            (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].default;
                           }}
                         >
                           {part}
@@ -405,7 +406,7 @@ const Home: NextPage = () => {
             <h2 className="text-2xl font-bold text-gray-900 font-lora">News ✨</h2>
             <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
             <div className="space-y-4">
               {newsData.map((news, index) => (
                 <div key={index} className="flex items-start">
@@ -478,7 +479,7 @@ const Home: NextPage = () => {
             <h2 className="text-2xl font-bold text-gray-900 font-lora">Honors and Awards 🏆</h2>
             <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
           </div>
-          <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
             <div className="space-y-4">
               {honorsData.map((honor, index) => (
                 <div key={index} className="flex items-start gap-4">
@@ -499,7 +500,7 @@ const Home: NextPage = () => {
         {publicationsData.publications.length > 0 && (
           <section id="publications" className="mb-12">
             <h2 className="text-2xl font-bold mb-6">Publications</h2>
-            <div className="bg-white p-6 rounded-lg shadow-sm">
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
               <div className="space-y-6">
                 {publicationsData.publications.map((publication, index) => (
                   <div key={index} className="space-y-2">
@@ -621,7 +622,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 gap-6 sm:gap-8">
             {filteredProjects.map((project, index) => (
               <div key={index} className="bg-white rounded-lg border border-gray-200 overflow-hidden relative"> 
                 {/* Status Badge - Top Left Corner (Completed only) */}
@@ -634,10 +635,10 @@ const Home: NextPage = () => {
                   </div>
                 )}
                 
-                <div className="flex flex-col md:flex-row">
+                <div className="flex flex-col lg:flex-row">
                   {project.image ? (
                     // Left column with image
-                    <div className="md:w-2/5 lg:w-3/7 h-72 md:h-auto relative bg-gray-50 flex items-center justify-center p-4">
+                    <div className="lg:w-2/5 xl:w-3/7 relative bg-gray-50 flex items-center justify-center p-4 sm:p-6" style={{ aspectRatio: projectImageAspect[index] || '3 / 2' }}>
                       <div className="relative w-full h-full">
                         <Image
                           src={project.image}
@@ -645,14 +646,22 @@ const Home: NextPage = () => {
                           fill
                           style={{ objectFit: 'contain' }}
                           className="rounded-lg"
-                          sizes="(max-width: 768px) 100vw, 33vw"
+                          sizes="(max-width: 1024px) 100vw, 33vw"
+                          onLoadingComplete={(img) => {
+                            const ratio = `${img.naturalWidth} / ${img.naturalHeight}`;
+                            setProjectImageAspect((prev) => {
+                              const next = [...prev];
+                              next[index] = ratio;
+                              return next;
+                            });
+                          }}
                         />
                       </div>
                     </div>
                   ) : null}
                   {/* Right column with content - adjusts width based on image presence */}
-                  <div className={`flex-1 p-6 ${!project.image ? 'md:p-8' : ''} ${!project.image && project.status === 'completed' ? 'pt-10' : ''}`}>
-                    <h3 className="text-xl font-semibold font-lora mb-3 text-gray-900">{project.title}</h3>
+                  <div className={`flex-1 p-4 sm:p-6 ${!project.image ? 'lg:p-8' : ''} ${!project.image && project.status === 'completed' ? 'pt-10' : ''}`}>
+                    <h3 className="text-lg sm:text-xl font-semibold font-lora mb-2 sm:mb-3 text-gray-900">{project.title}</h3>
                     <p className="text-gray-600 mb-4">
                       {project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
                         if (i % 4 === 0) return part;
@@ -714,17 +723,20 @@ const Home: NextPage = () => {
                     </p>
                     {/* Subtler info row */}
                     <div className="space-y-3">
-                      <div className="flex items-center">
-                        <span className="w-20 text-gray-600 text-sm">Period:</span>
+                      {/* Period */}
+                      <div className="grid grid-cols-[5rem,1fr] items-center">
+                        <span className="text-gray-600 text-sm">Period:</span>
                         <span className="text-sm text-gray-800">{project.startDate} - {project.endDate || 'Present'}</span>
                       </div>
-                      <div className="flex items-center">
-                        <span className="w-20 text-gray-600 text-sm">Role:</span>
+                      {/* Role */}
+                      <div className="grid grid-cols-[5rem,1fr] items-center">
+                        <span className="text-gray-600 text-sm">Role:</span>
                         <span className="text-sm text-gray-800">{project.role}</span>
                       </div>
-                      <div className="flex items-start">
-                        <span className="w-20 text-gray-600 mt-0.5 text-sm">Skills:</span>
-                        <div className="flex flex-wrap gap-2">
+                      {/* Skills */}
+                      <div className="grid grid-cols-[5rem,1fr] items-start">
+                        <span className="text-gray-600 text-sm">Skills:</span>
+                        <div className="min-w-0 flex flex-wrap gap-2">
                           {project.technologies.map((tech, idx) => (
                             <span key={idx} className="bg-gray-50 text-gray-800 px-2.5 py-0.5 rounded border border-gray-300 text-sm">
                               {tech}
@@ -748,7 +760,7 @@ const Home: NextPage = () => {
           </div>
           <div className="space-y-6">
             {experienceData.map((experience, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg border border-gray-200">
+              <div key={index} className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
                 <h3 className="text-lg font-semibold mb-4 text-gray-900">{experience.role}</h3>
                 <div className="divide-y divide-gray-100">
                   {experience.experiences.map((experience, idx) => (
@@ -806,7 +818,7 @@ const Home: NextPage = () => {
             </div>
             <div className="space-y-6">
               {servicesData.map((service, index) => (
-                <div key={index} className="bg-white p-6 rounded-lg border border-gray-200">
+                <div key={index} className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
                   <h3 className="text-xl font-semibold mb-4">{service.category}</h3>
                   <div className="space-y-4">
                     {service.items.map((item, idx) => (
