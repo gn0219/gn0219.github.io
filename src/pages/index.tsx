@@ -387,7 +387,7 @@ const Home: NextPage = () => {
             <div>
               <h3 className="text-xl font-semibold mb-4 font-lora">Interests</h3>
               <div className="flex flex-wrap gap-2">
-                {[...(profileData.interests["AI/ML"] || []), ...(profileData.interests["HCI"] || [])].map((interest, idx) => (
+                {[...(profileData.interests["AI/ML"] || []), ...(profileData.interests["Applications"] || [])].map((interest, idx) => (
                   <span
                     key={idx}
                     className="px-3 py-1 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"

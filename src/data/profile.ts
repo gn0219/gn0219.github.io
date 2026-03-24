@@ -25,7 +25,7 @@ export interface Profile {
   about: string;
   interests: {
     "AI/ML": string[];
-    "HCI": string[];
+    "Applications": string[];
   };
   relatedWebsite: {
     title: string;
@@ -43,9 +43,9 @@ export interface Profile {
 export const profileData: Profile = {
   name: "Gyuna Kim",
   koreanName: "김규나",
-  title: "Digital Health and HCI Researcher",
+  title: "ML Engineer · AI Researcher",
   email: "gyuna.kim@kaist.ac.kr",
-  location: "Daejeon, Republic of Korea",
+  location: "Incheon, Republic of Korea",
   bio: "Researching signals (physiological, wearable, speech) for digital health and mental well-being | M.S. student @ KAIST ICLab",
   image: "/images/photos/profile.jpg",
   socialLinks: {
@@ -60,7 +60,7 @@ export const profileData: Profile = {
       departmentUrl: "https://gsds.kaist.ac.kr/",
       institution: "KAIST",
       institutionUrl: "https://www.kaist.ac.kr/",
-      year: "2024.02 - Present"
+      year: "2024.03 - 2026.02"
     },
     {
       degree: "B.S.",
@@ -68,25 +68,27 @@ export const profileData: Profile = {
       departmentUrl: "https://ie.unist.ac.kr/",
       institution: "UNIST",
       institutionUrl: "https://www.unist.ac.kr/",
-      year: "2020.02 - 2024.02"
+      year: "2020.03 - 2024.02"
     }
   ],
   skills: [
   ],
-  about: `I am a master's student at [KAIST ICLab](https://ic.kaist.ac.kr/, color=blue), advised by Prof. Uichin Lee.
-  My research spans various areas of digital health — from modeling human states using multimodal data, to designing evaluative tools.
-  While the specific topics differ, they all share a common goal: leveraging everyday data and technology to support better health outcomes.
-  Ultimately, I aim to help build systems that make digital health support more effective, interpretable, and adaptable across different contexts.
+  about: `I am an AI researcher and engineer with an M.S. from [KAIST ICLab](https://ic.kaist.ac.kr/, color=blue), advised by Prof. Uichin Lee.
+My work focuses on building and evaluating AI systems that learn from real-world, multimodal data, with experience spanning LLM evaluation, context engineering, agent systems, and sensor-based modeling.
+Across projects in healthcare, interactive systems, and applied AI, I have been interested in how data, models, and system design come together to support reliable and useful decision-making.
+Most recently, I studied how context engineering affects the performance and efficiency of LLMs in passive sensing-based inference. 
+Ultimately, I aim to build AI systems that are practical, interpretable, and adaptable to real-world environments.
 `,
   interests: {
     "AI/ML": [
+      "LLM Context Engineering",
+      "Multi-Agent Systems",
+      "Multimodal Data Analysis",
+    ],
+    "Applications": [
       "AI Healthcare",
       "Digital Phenotyping",
-      "Multimodal Data Analysis",
-      "LLM Context Engineering"
-    ],
-    "HCI": [
-      "Visual Analytics",
+      "Physical AI Safety",
       "Interactive Systems"
     ]
   },

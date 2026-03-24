@@ -6,6 +6,11 @@ export interface NewsItem {
 
 export const newsData: NewsItem[] = [
   {
+    date: "2026-02",
+    title: "MS Graduation",
+    description: "I graduated with my M.S. from KAIST, with my thesis research on LLM-based passive sensing 🎓"
+  },
+  {
     date: "2025-09",
     title: "K-Data Science Conference 2025",
     description: "I attended [K-Data Science Conference](https://kdatascience.kr/conference/event, color=green) in Daegu, Korea, and received the Creative Research Award 🏆"

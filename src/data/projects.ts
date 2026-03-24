@@ -28,7 +28,7 @@ export const projectsData: ProjectsData = {
       role: "Research Lead",
       technologies: ["Context Engineering", "Sensor Data"],
       status: "ongoing",
-      // image: "/images/projects/mental_llm_eval.png"
+      image: "/images/projects/compass_overview.png"
     },
     {
       title: "Multi-Agent System for Mental Health Diagnosis Support and Coaching",
@@ -56,7 +56,7 @@ export const projectsData: ProjectsData = {
       role: "Methodology and Model Development",
       technologies: ["PyTorch", "Sensor Fusion","Speech Emotion Recognition"],
       status: "completed",
-      image: "/images/projects/lg_overview.png",
+      image: "/images/projects/smarthome_overview.png",
       links: {
         github: "https://github.com/Kaist-ICLab/multimodal-mh-detection",
         // demo: "https://www.researchgate.net/publication/3710000000000000000"

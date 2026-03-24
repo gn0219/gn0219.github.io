@@ -31,14 +31,14 @@ export const publicationsData: PublicationsData = {
     //   video: "/images/publications/video.mp4",
     //   github: "https://github.com/Kaist-ICLab/multimodal-mh-detection",
     // },
-    // {
-    //   title: "EmoWorker: A Multimodal Dataset for Assessing Emotion, Stress, and Emotional Workload in Interpersonal Work Scenario",
-    //   authors: ["Duri Lee", "Eunji Park", "Gyuna Kim", "Yunjo Han", "Uichin Lee"],
-    //   venue: "Scientific Data",
-    //   year: "2025",
-    //   type: "journal",
-    //   // doi: "10.1038/s41597-025-02455-x",
-    //   github: "https://github.com/Kaist-ICLab/EmoWorker",
-    // }
+    {
+      title: "A Multimodal Dataset for Assessing Emotion, Stress, and Emotional Workload in Interpersonal Work Scenario",
+      authors: ["Duri Lee", "Eunji Park", "Gyuna Kim", "Yunjo Han", "Uichin Lee"],
+      venue: "Scientific Data",
+      year: "2026",
+      type: "journal",
+      doi: "10.1038/s41597-025-06531-2",
+      github: "https://github.com/Kaist-ICLab/EmoWorker",
+    }
   ]
 }; 
