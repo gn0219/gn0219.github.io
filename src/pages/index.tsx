@@ -12,8 +12,7 @@ import { experienceData } from '@/data/experience';
 import { photosData } from '@/data/photos';
 import { useState, useEffect, useRef, TouchEvent } from 'react';
 import { theme } from '@/styles/theme';
-
-type ValidLinkColor = keyof typeof theme.links;
+import { RichText } from '@/components/RichText';
 
 const Home: NextPage = () => {
   const [activeSection, setActiveSection] = useState('about');
@@ -26,7 +25,7 @@ const Home: NextPage = () => {
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
   const [isAutoPlayPaused, setIsAutoPlayPaused] = useState(false);
   const [projectFilter, setProjectFilter] = useState<'all' | 'ongoing' | 'completed'>('all');
-  const [projectImageAspect, setProjectImageAspect] = useState<string[]>([]);
+  const [projectSlideIndices, setProjectSlideIndices] = useState<number[]>([]);
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -73,15 +72,27 @@ const Home: NextPage = () => {
     };
   }, []);
 
+  // Auto-sliding project images
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProjectSlideIndices(prev => {
+        return filteredProjects.map((project, i) => {
+          const images = project.images || (project.image ? [project.image] : []);
+          if (images.length <= 1) return 0;
+          return ((prev[i] ?? 0) + 1) % images.length;
+        });
+      });
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [filteredProjects]);
+
   // Auto-sliding photos
   useEffect(() => {
     if (isAutoPlayPaused) return;
-    
+
     const interval = setInterval(() => {
-      setCurrentPhotoIndex((prevIndex) => 
-        prevIndex === 0 ? photosData.length - 1 : prevIndex - 1
-      );
-    }, 5000); // Change photo every 5 seconds
+      setCurrentPhotoIndex(prev => prev === 0 ? photosData.length - 1 : prev - 1);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [isAutoPlayPaused]);
@@ -151,7 +162,6 @@ const Home: NextPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 font-[Pretendard]">
       <Head>
-        {/* <title>{profileData.name} - Personal Homepage</title> */}
         <title>{`${profileData.name} - Personal Homepage`}</title>
         <meta name="description" content={`${profileData.name}'s personal homepage`} />
         <link rel="icon" type="image/png" href="/favicon.png" />
@@ -176,15 +186,19 @@ const Home: NextPage = () => {
             <nav className="flex items-center">
               {/* Navigation buttons - only visible on md and larger screens */}
               <div className="hidden md:flex items-center space-x-8 mr-4">
-                {['about me', 'projects'].map((section) => ( /*, 'etc', 'photos' */
+                {([
+                  { id: 'aboutme',    label: 'About' },
+                  { id: 'projects',   label: 'Research' },
+                  { id: 'experience', label: 'Experience' },
+                ] as const).map(({ id, label }) => (
                   <button
-                    key={section}
-                    onClick={() => scrollToSection(section.replace(' ', ''))}
+                    key={id}
+                    onClick={() => scrollToSection(id)}
                     className={`text-gray-600 hover:text-blue-600 text-base font-medium ${
-                      activeSection === section.replace(' ', '') ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : ''
+                      activeSection === id ? 'text-blue-600 font-semibold border-b-2 border-blue-600' : ''
                     }`}
                   >
-                    {section.charAt(0).toUpperCase() + section.slice(1)}
+                    {label}
                   </button>
                 ))}
               </div>
@@ -293,39 +307,10 @@ const Home: NextPage = () => {
 
             {/* Right Column: Description */}
             <div className="flex-grow w-full">
-              <h2 className="text-5xl font-bold mb-6 font-lora text-left">Hi everyone! 👋</h2>
+              <h2 className="text-4xl font-bold mb-6 font-lora text-left">Hi, I'm Gyuna 👋</h2>
               <div className="prose max-w-none text-gray-700 text-left">
                 <p>
-                  {profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
-                    if (i % 4 === 0) return part;
-                    if (i % 4 === 1) {
-                      const url = profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
-                      const color = profileData.about.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
-                      const linkColor = color && theme.links[color] ? color : 'social';
-                      return (
-                        <a
-                          key={i}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="transition-colors duration-200 font-semibold"
-                          style={{
-                            color: theme.links[linkColor].default,
-                            textDecoration: 'underline',
-                          }}
-                          onMouseEnter={(e) => {
-                            (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].hover;
-                          }}
-                          onMouseLeave={(e) => {
-                            (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].default;
-                          }}
-                        >
-                          {part}
-                        </a>
-                      );
-                    }
-                    return null;
-                  })}
+                  <RichText text={profileData.about} defaultColor="social" linkClassName="font-semibold" />
                 </p>
               </div>
             </div>
@@ -386,14 +371,21 @@ const Home: NextPage = () => {
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-4 font-lora">Interests</h3>
-              <div className="flex flex-wrap gap-2">
-                {[...(profileData.interests["AI/ML"] || []), ...(profileData.interests["Applications"] || [])].map((interest, idx) => (
-                  <span
-                    key={idx}
-                    className="px-3 py-1 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
-                  >
-                    {interest}
-                  </span>
+              <div className="space-y-3">
+                {(Object.entries(profileData.interests) as [string, string[]][]).map(([category, items]) => (
+                  <div key={category}>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">{category}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {items.map((interest, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 rounded-full text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 transition-colors"
+                        >
+                          {interest}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -401,12 +393,13 @@ const Home: NextPage = () => {
         </section>
 
         {/* News Section */}
-        <section className="mb-16">
+        <section id="news" className="mb-16">
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-gray-900 font-lora">News ✨</h2>
             <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
           </div>
-          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="max-h-56 overflow-y-auto p-4 sm:p-6 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400">
             <div className="space-y-4">
               {newsData.map((news, index) => (
                 <div key={index} className="flex items-start">
@@ -415,95 +408,44 @@ const Home: NextPage = () => {
                   </div>
                   <div className="flex-grow">
                     <p className="text-gray-700">
-                      {news.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
-                        if (i % 4 === 0) return part;
-                        if (i % 4 === 1) {
-                          const url = news.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
-                          const color = news.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
-                          const linkColor = color && theme.links[color] ? color : 'social';
-                          return (
-                            <a
-                              key={i}
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="transition-colors duration-200"
-                              style={{
-                                color: theme.links[linkColor].default,
-                                textDecoration: 'underline',
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.color = theme.links[linkColor].hover;
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.color = theme.links[linkColor].default;
-                              }}
-                            >
-                              {part}
-                            </a>
-                          );
-                        }
-                        return null;
-                      })}
+                      <RichText text={news.description} />
                     </p>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-
-        {/* Research Interests Section */}
-        {/* <section id="research" className="mb-12 scroll-mt-24">
-          <h2 className="text-2xl font-bold mb-4">Research Interests</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {researchData.interests.map((interest, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-                <h3 className="text-xl font-semibold mb-2">{interest.title}</h3>
-                <p className="text-gray-600 mb-4">{interest.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {interest.keywords.map((keyword, idx) => (
-                    <span key={idx} className="bg-gray-100 px-3 py-1 rounded-full text-sm">
-                      {keyword}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section> */}
-
-        {/* Honors and Awards Section */}
-        <section id="etc" className="mb-16 scroll-mt-24">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 font-lora">Honors and Awards 🏆</h2>
-            <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
-          </div>
-          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
-            <div className="space-y-4">
-              {honorsData.map((honor, index) => (
-                <div key={index} className="flex items-start gap-4">
-                  <span className="text-gray-500 min-w-[4rem]">{honor.year}</span>
-                  <div>
-                    <span className="font-semibold">{honor.title}</span>
-                    {honor.organization && (
-                      <span className="text-gray-600"> - {honor.organization}</span>
-                    )}
-                  </div>
-                </div>
-              ))}
             </div>
           </div>
         </section>
 
         {/* Publications Section - Hidden if empty */}
         {publicationsData.publications.length > 0 && (
-          <section id="publications" className="mb-12">
-            <h2 className="text-2xl font-bold mb-6">Publications</h2>
-            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
+          <section id="publications" className="mb-16 scroll-mt-24">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 font-lora">Publications 📄</h2>
+              <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+            </div>
+            <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
               <div className="space-y-6">
                 {publicationsData.publications.map((publication, index) => (
-                  <div key={index} className="space-y-2">
+                  <div key={index} className="space-y-1.5">
+                    {/* Status badge above title for under-review papers */}
+                    {publication.status === 'submitted' && (
+                      <div>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+                          Under Review
+                        </span>
+                      </div>
+                    )}
+                    {publication.status === 'under revision' && (
+                      <div>
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block"></span>
+                          Under Revision
+                        </span>
+                      </div>
+                    )}
                     <h3 className="text-lg font-semibold leading-tight">{publication.title}</h3>
                     <p className="text-sm text-gray-600 leading-tight">
                       {publication.authors.map((author, i) => (
@@ -518,11 +460,12 @@ const Home: NextPage = () => {
                         </span>
                       ))}
                     </p>
-                    <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm text-gray-600 leading-tight mb-0">
-                        {publication.venue} {publication.year}
+                        {publication.venue ? `${publication.venue}, ${publication.year}` : publication.year}
                       </p>
-                      <div className="flex flex-wrap gap-2 w-full mt-0 -mt-1">
+                    </div>
+                    <div className="flex flex-wrap gap-2 w-full mt-1">
                         {publication.doi && (
                           <a
                             href={`https://doi.org/${publication.doi}`}
@@ -583,13 +526,12 @@ const Home: NextPage = () => {
                             className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors duration-200"
                           >
                             <svg className="w-3 h-3 mr-0.5" fill="currentColor" viewBox="0 0 24 24">
-                              <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                              <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
                             </svg>
                             GitHub
                           </a>
                         )}
                       </div>
-                    </div>
                   </div>
                 ))}
               </div>
@@ -601,7 +543,7 @@ const Home: NextPage = () => {
         <section id="projects" className="mb-16">
           <div className="mb-6 flex items-center gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 font-lora">Projects</h2>
+              <h2 className="text-2xl font-bold text-gray-900 font-lora">Research Projects</h2>
               <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
             </div>
             {/* Compact Filter Buttons inline next to title */}
@@ -627,7 +569,7 @@ const Home: NextPage = () => {
               <div key={index} className="bg-white rounded-lg border border-gray-200 overflow-hidden relative"> 
                 {/* Status Badge - Top Left Corner (Completed only) */}
                 {project.status === 'completed' && (
-                  <div className="absolute top-3 left-3 z-0">
+                  <div className="absolute top-3 left-3 z-10">
                     <div className="flex items-center px-2.5 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded border border-gray-200">
                       <div className="w-1.5 h-1.5 bg-gray-600 rounded-full mr-1.5"></div>
                       Completed
@@ -636,63 +578,80 @@ const Home: NextPage = () => {
                 )}
                 
                 <div className="flex flex-col lg:flex-row">
-                  {project.image ? (
-                    // Left column with image
-                    <div className="lg:w-2/5 xl:w-3/7 relative bg-gray-50 flex items-center justify-center p-3 sm:p-6" style={{ aspectRatio: projectImageAspect[index] || '3 / 2' }}>
-                      <div className="relative w-full h-full">
-                        <Image
-                          src={project.image}
-                          alt={project.title}
-                          fill
-                          style={{ objectFit: 'contain', objectPosition: 'center' }}
-                          className="rounded-lg"
-                          sizes="(max-width: 1024px) 100vw, 33vw"
-                          onLoadingComplete={(img) => {
-                            const ratio = `${img.naturalWidth} / ${img.naturalHeight}`;
-                            setProjectImageAspect((prev) => {
-                              const next = [...prev];
-                              next[index] = ratio;
-                              return next;
-                            });
-                          }}
-                        />
+                  {(project.images && project.images.length > 0) || project.image ? (() => {
+                    const images = project.images || (project.image ? [project.image] : []);
+                    const currentIdx = projectSlideIndices[index] ?? 0;
+                    return (
+                      <div className="w-full lg:w-2/5 xl:w-3/7 relative bg-gray-50 flex items-center justify-center p-3 sm:p-4 aspect-video lg:aspect-auto">
+                        <div className="relative w-full h-full group">
+                          <Image
+                            src={images[currentIdx]}
+                            alt={project.title}
+                            fill
+                            style={{ objectFit: 'contain', objectPosition: 'center' }}
+                            className="rounded-lg transition-opacity duration-500"
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                          />
+                          {images.length > 1 && (
+                            <>
+                              {/* Arrow navigation */}
+                              <button
+                                onClick={() => setProjectSlideIndices(prev => {
+                                  const next = [...prev];
+                                  next[index] = (currentIdx - 1 + images.length) % images.length;
+                                  return next;
+                                })}
+                                className="absolute left-1 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                                aria-label="Previous image"
+                              >
+                                <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => setProjectSlideIndices(prev => {
+                                  const next = [...prev];
+                                  next[index] = (currentIdx + 1) % images.length;
+                                  return next;
+                                })}
+                                className="absolute right-1 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+                                aria-label="Next image"
+                              >
+                                <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                                </svg>
+                              </button>
+                              {/* Dot indicators */}
+                              <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5">
+                                {images.map((_, dotIdx) => (
+                                  <button
+                                    key={dotIdx}
+                                    onClick={() => setProjectSlideIndices(prev => {
+                                      const next = [...prev];
+                                      next[index] = dotIdx;
+                                      return next;
+                                    })}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                                      dotIdx === currentIdx ? 'w-4 bg-blue-500' : 'w-1.5 bg-gray-400/70'
+                                    }`}
+                                    aria-label={`Go to image ${dotIdx + 1}`}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
+                    );
+                  })() : null}
                   {/* Right column with content - adjusts width based on image presence */}
-                  <div className={`flex-1 p-4 sm:p-6 ${!project.image ? 'lg:p-8' : ''} ${!project.image && project.status === 'completed' ? 'pt-10' : ''}`}>
+                  {(() => {
+                    const hasImage = !!(project.images?.length || project.image);
+                    return (
+                  <div className={`flex-1 p-4 sm:p-6 ${!hasImage ? 'lg:p-8' : ''} ${!hasImage && project.status === 'completed' ? 'pt-10' : ''}`}>
                     <h3 className="text-lg sm:text-xl font-semibold font-lora mb-2 sm:mb-3 text-gray-900">{project.title}</h3>
                     <p className="text-gray-600 mb-4">
-                      {project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
-                        if (i % 4 === 0) return part;
-                        if (i % 4 === 1) {
-                          const url = project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
-                          const color = project.description.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2] as keyof typeof theme.links;
-                          const linkColor = color && theme.links[color] ? color : 'green';
-                          return (
-                            <a
-                              key={i}
-                              href={url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="transition-colors duration-200"
-                              style={{
-                                color: theme.links[linkColor].default,
-                                textDecoration: 'underline',
-                              }}
-                              onMouseEnter={(e) => {
-                                (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].hover;
-                              }}
-                              onMouseLeave={(e) => {
-                                (e.currentTarget as HTMLAnchorElement).style.color = theme.links[linkColor].default;
-                              }}
-                            >
-                              {part}
-                            </a>
-                          );
-                        }
-                        return null;
-                      })}
+                      <RichText text={project.description} defaultColor="green" />
                       {project.links && (project.links.github || project.links.demo) && (
                         <span className="block mt-2 text-sm text-gray-500">
                           <span className="inline-flex items-center gap-2">
@@ -746,9 +705,33 @@ const Home: NextPage = () => {
                       </div>
                     </div>
                   </div>
+                  );})()}
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Honors and Awards Section */}
+        <section id="etc" className="mb-16 scroll-mt-24">
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 font-lora">Honors and Awards 🏆</h2>
+            <div className="w-12 h-0.5 bg-blue-600 mt-2"></div>
+          </div>
+          <div className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
+            <div className="space-y-4">
+              {honorsData.map((honor, index) => (
+                <div key={index} className="flex items-start gap-4">
+                  <span className="text-gray-500 min-w-[4rem]">{honor.year}</span>
+                  <div>
+                    <span className="font-semibold">{honor.title}</span>
+                    {honor.organization && (
+                      <span className="text-gray-600"> - {honor.organization}</span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -763,44 +746,15 @@ const Home: NextPage = () => {
               <div key={index} className="bg-white p-4 sm:p-6 rounded-lg border border-gray-200">
                 <h3 className="text-lg font-semibold mb-4 text-gray-900">{experience.role}</h3>
                 <div className="divide-y divide-gray-100">
-                  {experience.experiences.map((experience, idx) => (
+                  {experience.experiences.map((item, idx) => (
                     <div key={idx} className="flex justify-between items-start py-4 first:pt-0 last:pb-0">
                       <div className="flex-1 pr-4">
-                        <h4 className="font-semibold text-gray-900 mb-1 text-base">{experience.title}</h4>
+                        <h4 className="font-semibold text-gray-900 mb-1 text-base">{item.title}</h4>
                         <p className="text-gray-800 text-base leading-relaxed">
-                          {experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/).map((part, i) => {
-                            if (i % 4 === 0) return part;
-                            if (i % 4 === 1) {
-                              const url = experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 1];
-                              const colorParam = experience.institution.split(/\[(.*?)\]\((.*?)(?:,\s*color=(\w+))?\)/)[i + 2];
-                              const color = (colorParam && Object.keys(theme.links).includes(colorParam) ? colorParam : 'university') as ValidLinkColor;
-                              return (
-                                <a
-                                  key={i}
-                                  href={url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="transition-colors duration-200"
-                                  style={{
-                                    color: theme.links[color].default,
-                                    textDecoration: 'underline',
-                                  }}
-                                  onMouseEnter={(e) => {
-                                    (e.currentTarget as HTMLAnchorElement).style.color = theme.links[color].hover;
-                                  }}
-                                  onMouseLeave={(e) => {
-                                    (e.currentTarget as HTMLAnchorElement).style.color = theme.links[color].default;
-                                  }}
-                                >
-                                  {part}
-                                </a>
-                              );
-                            }
-                            return null;
-                          })}
+                          <RichText text={item.institution} defaultColor="university" />
                         </p>
                       </div>
-                      <span className="whitespace-nowrap text-gray-600 text-right text-sm">{experience.year}</span>
+                      <span className="whitespace-nowrap text-gray-600 text-right text-sm">{item.year}</span>
                     </div>
                   ))}
                 </div>
@@ -857,7 +811,7 @@ const Home: NextPage = () => {
                     src={photosData[currentPhotoIndex].src}
                     alt={`Photo ${photosData.length - currentPhotoIndex}`}
                     fill
-                    className="object-cover transition-opacity duration-500"
+                    className="object-cover"
                     priority
                   />
                   <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent px-4 py-3">
@@ -932,7 +886,7 @@ const Home: NextPage = () => {
 
         {/* Footer */}
         <footer className="mt-16 pb-8 text-center text-gray-500">
-          <p>Copyright © 2025 Gyuna Kim. All rights reserved. | Last updated on September 11, 2025.</p>
+          <p>Copyright © 2025 Gyuna Kim. All rights reserved. | Last updated on March, 2026.</p>
         </footer>
       </main>
     </div>
